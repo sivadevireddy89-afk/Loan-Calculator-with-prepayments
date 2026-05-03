@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Home Loan EMI Calculator</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>body{font-family:system-ui,sans-serif;background:#f1f5f9}.g{background:linear-gradient(135deg,#4f46e5,#7c3aed)}.c{box-shadow:0 8px 30px rgba(0,0,0,.08)}tr:nth-child(even){background:#f8fafc}
+@media print{body{background:white}.g{-webkit-print-color-adjust:exact;print-color-adjust:exact}#res{display:block!important}.c{box-shadow:none;border:1px solid #e2e8f0}canvas{max-height:360px}button,#preps select,.no-print{display:none}.print-only{display:block!important}input{border:none;padding:0;background:transparent}#preps .space-y-1\.5{border:1px solid #e2e8f0;padding:8px;margin-bottom:8px}}
+.print-only{display:none}</style>
+</head>
+<body>
+<div class="g py-10 px-4 text-center text-white"><h1 class="text-3xl font-bold">Home Loan EMI Calculator</h1></div>
+<div class="max-w-6xl mx-auto px-4 -mt-6">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+<div class="lg:col-span-1">
+<div class="bg-white rounded-xl c p-5">
+<h2 class="font-semibold mb-4">Loan Details</h2>
+<form onsubmit="event.preventDefault();calc()">
+<div class="space-y-3">
+<div><label class="text-sm text-slate-600">Currency</label><select id="CUR" onchange="updCur()" class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 outline-none bg-white"><option value="USD">USD - US Dollar</option><option value="INR" selected>INR - Indian Rupee</option><option value="AUD">AUD - Australian Dollar</option></select></div>
+<div><label class="text-sm text-slate-600" id="LP">Loan Amount ($)</label><input type="number" id="P" value="4000000" class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 outline-none"></div>
+<div><label class="text-sm text-slate-600">Interest Rate (%/year)</label><input type="number" id="R" value="7.5" step="0.1" class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 outline-none"></div>
+<div><label class="text-sm text-slate-600">Tenure (Years)</label><input type="number" id="N" value="10" class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 outline-none"></div>
+<div><label class="text-sm text-slate-600">Loan Start Month</label><input type="month" id="START" min="2024-01" class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 outline-none bg-white"></div>
+<div class="pt-1"><div class="flex items-center justify-between mb-2"><label class="text-sm font-medium text-slate-700">Prepayments</label><button type="button" onclick="addPrep()" class="text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded hover:bg-indigo-100">+ Add</button></div><div id="preps" class="space-y-2"></div></div>
+<div class="flex gap-2"><button type="submit" class="flex-1 g text-white font-semibold py-2.5 rounded-lg hover:opacity-90">Calculate EMI</button><button type="button" onclick="window.print()" class="px-4 py-2.5 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 font-medium" title="Print / Save as PDF">🖨️</button><button type="button" onclick="resetAll()" class="px-4 py-2.5 bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-100 font-medium" title="Reset All">↺</button></div>
+</div>
+</form>
+</div>
+</div>
+<div class="lg:col-span-2 space-y-5" id="res" style="display:none">
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+<div class="bg-white rounded-xl c p-5 text-center"><p class="text-xs text-slate-500">Monthly EMI</p><p class="text-xl font-bold text-indigo-600" id="emi">$0</p></div>
+<div class="bg-white rounded-xl c p-5 text-center"><p class="text-xs text-slate-500">Total Interest</p><p class="text-xl font-bold text-rose-500" id="ti">$0</p></div>
+<div class="bg-white rounded-xl c p-5 text-center"><p class="text-xs text-slate-500">Total Payment</p><p class="text-xl font-bold text-emerald-600" id="tp">$0</p></div>
+</div>
+<div id="savedRow" class="grid grid-cols-1 sm:grid-cols-2 gap-4" style="display:none">
+<div class="bg-white rounded-xl c p-5 text-center border-l-4 border-amber-400"><p class="text-xs text-slate-500">Interest Saved</p><p class="text-xl font-bold text-amber-500" id="saved">$0</p></div>
+<div class="bg-white rounded-xl c p-5 text-center border-l-4 border-sky-400"><p class="text-xs text-slate-500">Tenure Reduced</p><p class="text-xl font-bold text-sky-500" id="tenRed">0 mo</p></div>
+</div>
+<div class="bg-white rounded-xl c p-5">
+<h3 class="font-semibold mb-3">Payment Breakdown</h3>
+<div class="flex items-center gap-6 flex-wrap">
+<div class="relative w-36 h-36"><svg viewBox="0 0 36 36" class="w-full h-full -rotate-90"><circle cx="18" cy="18" r="15.915" fill="none" stroke="#e2e8f0" stroke-width="3"/><circle id="pc" cx="18" cy="18" r="15.915" fill="none" stroke="#f43f5e" stroke-width="3" stroke-dasharray="0 100" stroke-linecap="round"/></svg><div class="absolute inset-0 flex flex-col items-center justify-center"><span class="text-xs text-slate-500">Interest</span><span class="text-sm font-bold text-rose-500" id="ip">0%</span></div></div>
+<div class="space-y-2"><div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-emerald-500"></div><span class="text-sm text-slate-600">Principal: <b id="pl">$0</b></span></div><div class="flex items-center gap-2"><div class="w-3 h-3 rounded-full bg-rose-500"></div><span class="text-sm text-slate-600">Interest: <b id="il">$0</b></span></div></div>
+</div>
+</div>
+<div class="bg-white rounded-xl c p-5">
+<h3 class="font-semibold mb-3">Timeline — Principal, Interest & Balance</h3>
+<div class="relative w-full" style="height:320px"><canvas id="chart" class="w-full h-full"></canvas></div>
+<div class="flex justify-center gap-3 mt-3 text-xs flex-wrap"><span class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-emerald-200"></span><span class="w-3 h-3 rounded-sm bg-emerald-500"></span>Principal</span><span class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-rose-200"></span><span class="w-3 h-3 rounded-sm bg-rose-500"></span>Interest</span><span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-slate-400"></span><span class="w-3 h-3 rounded-full bg-indigo-600"></span>Balance</span><span class="text-slate-400">(faded=original, bright=with prepay)</span></div>
+</div>
+<div id="prepTableSection" class="bg-white rounded-xl c overflow-hidden" style="display:none">
+<div class="p-5 border-b border-slate-100"><h3 class="font-semibold text-amber-600">Prepayment Summary</h3><p class="text-xs text-slate-500 mt-1">All prepayments scheduled</p></div>
+<div class="overflow-x-auto">
+<table class="w-full text-sm"><thead><tr class="bg-amber-50 text-slate-600 text-left"><th class="px-5 py-3 font-medium">#</th><th class="px-5 py-3 font-medium">Month</th><th class="px-5 py-3 font-medium">Frequency</th><th class="px-5 py-3 font-medium text-right">Amount</th></tr></thead><tbody id="prepTableBody"></tbody></table>
+</div>
+</div>
+<div class="bg-white rounded-xl c overflow-hidden">
+<div class="p-5 border-b border-slate-100"><h3 class="font-semibold">Year-wise Breakdown</h3><p class="text-xs text-slate-500 mt-1">Click a row for monthly details</p></div>
+<div class="overflow-x-auto">
+<table class="w-full text-sm"><thead><tr class="bg-slate-50 text-slate-600 text-left"><th class="px-3 py-3 font-medium w-1/4">Year</th><th class="px-3 py-3 font-medium text-right">Principal</th><th class="px-3 py-3 font-medium text-right">Interest</th><th class="px-3 py-3 font-medium text-right w-28">Prepay</th><th class="px-3 py-3 font-medium text-right">Total</th><th class="px-3 py-3 font-medium text-right">Balance</th></tr></thead><tbody id="yt"></tbody></table>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="mdl" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4" onclick="if(event.target===this)cm()">
+<div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[80vh] overflow-hidden">
+<div class="p-5 border-b border-slate-100 flex justify-between items-center"><div><h3 class="font-semibold" id="mt">Monthly Breakdown</h3><p class="text-xs text-slate-500" id="ms"></p></div><button onclick="cm()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200">&times;</button></div>
+<div class="overflow-auto max-h-[60vh]">
+<table class="w-full text-sm"><thead class="sticky top-0 bg-white"><tr class="bg-slate-50 text-slate-600 text-left"><th class="px-5 py-3 font-medium">Month</th><th class="px-5 py-3 font-medium text-right">EMI</th><th class="px-5 py-3 font-medium text-right">Principal</th><th class="px-5 py-3 font-medium text-right">Interest</th><th class="px-5 py-3 font-medium text-right">Balance</th></tr></thead><tbody id="mtb"></tbody></table>
+</div>
+</div>
+</div>
+<script>
+let yd=[],yd0=[];
+function cur(){return document.getElementById('CUR').value}
+function sym(){const c=cur();return c==='INR'?'₹':c==='AUD'?'A$':'$'}
+function loc(){const c=cur();return c==='INR'?'en-IN':c==='AUD'?'en-AU':'en-US'}
+function fc(n){return sym()+n.toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2})}
+function updCur(){const c=cur();document.getElementById('LP').textContent='Loan Amount ('+sym()+')';if(c==='INR')document.getElementById('P').value=4000000;else if(c==='AUD')document.getElementById('P').value=600000;else document.getElementById('P').value=300000;}
+(function init(){document.getElementById('START').value='2025-06';document.getElementById('LP').textContent='Loan Amount (₹)';setTimeout(()=>{addDefPrep(50000,3);addDefPrep(50000,3);addDefPrep(30997,6);addDefPrep(47700,7);addDefPrep(50000,9);addDefPrep(500000,11);addDefPrep(70000,12);},0);})();
+function addDefPrep(amt,mNum){prepCount++;const s=getStart();const dte=new Date(s.getFullYear(),s.getMonth()+mNum-1,1);const dteStr=dte.toLocaleString('en-US',{month:'short',year:'numeric'});const d=document.createElement('div');d.id='pr'+prepCount;d.className='space-y-1.5 border border-slate-100 rounded-lg p-2 bg-slate-50';d.innerHTML=`<div class="flex gap-2 items-center"><input type="number" value="${amt}" placeholder="Amount" class="flex-1 px-2 py-1.5 border rounded text-sm outline-none prepA"><button type="button" onclick="document.getElementById('preps').removeChild(document.getElementById('pr${prepCount}'))" class="text-rose-500 hover:text-rose-700 text-sm font-bold px-1 no-print">&times;</button></div><div class="flex gap-2 items-center no-print"><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepM">${genMonths()}</select><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepF"><option value="0" selected>One Time</option><option value="1">Monthly</option><option value="3">Quarterly</option><option value="6">Half-yearly</option><option value="12">Yearly</option></select></div><div class="print-only text-sm text-slate-600 mt-1">${sym()}${amt} on ${dteStr} (One Time)</div>`;document.getElementById('preps').appendChild(d);setTimeout(()=>{const opts=d.querySelector('.prepM');for(let i=0;i<opts.options.length;i++){if(opts.options[i].value==mNum){opts.selectedIndex=i;break;}}},0);}
+function getStart(){const v=document.getElementById('START').value||new Date().toISOString().slice(0,7);const [y,m]=v.split('-').map(Number);return new Date(y,m-1,1);}
+function fmtMonth(d){return d.toLocaleString('en-US',{month:'short',year:'numeric'});}
+function fmtMY(mNum){const s=getStart();const d=new Date(s.getFullYear(),s.getMonth()+mNum-1,1);return fmtMonth(d);}
+function yrLabel(yi){const s=getStart();const sy=new Date(s.getFullYear(),s.getMonth()+yi*12,1);const ey=new Date(sy.getFullYear(),sy.getMonth()+11,1);return fmtMonth(sy)+' - '+fmtMonth(ey);}
+let prepCount=0;
+function genMonths(){const N=+document.getElementById('N').value*12||240;let opts='';for(let m=1;m<=N;m++){opts+=`<option value="${m}">${fmtMY(m)}</option>`;}return opts;}
+function addPrep(){prepCount++;const d=document.createElement('div');d.id='pr'+prepCount;d.className='space-y-1.5 border border-slate-100 rounded-lg p-2 bg-slate-50';d.innerHTML=`<div class="flex gap-2 items-center"><input type="number" placeholder="Amount" class="flex-1 px-2 py-1.5 border rounded text-sm outline-none prepA" oninput="updPrepLabel('pr${prepCount}')"><button type="button" onclick="document.getElementById('preps').removeChild(document.getElementById('pr${prepCount}'))" class="text-rose-500 hover:text-rose-700 text-sm font-bold px-1 no-print">&times;</button></div><div class="flex gap-2 items-center no-print"><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepM" onchange="updPrepLabel('pr${prepCount}')"><option value="">Select Month</option>${genMonths()}</select><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepF" onchange="updPrepLabel('pr${prepCount}')"><option value="0">One Time</option><option value="1">Monthly</option><option value="3">Quarterly</option><option value="6">Half-yearly</option><option value="12">Yearly</option></select></div><div class="print-only text-sm text-slate-600 mt-1" id="lbl${prepCount}">Prepayment details</div>`;document.getElementById('preps').appendChild(d);}
+function getPreps(){const rows=document.querySelectorAll('#preps > div'),preps=[];rows.forEach(r=>{const a=+r.querySelector('.prepA').value,m=+r.querySelector('.prepM').value,f=+r.querySelector('.prepF').value;if(a&&m)preps.push({a,m,f})});return preps;}
+function calc(){
+let P=+document.getElementById('P').value,R=+document.getElementById('R').value/100/12,N=+document.getElementById('N').value*12;
+if(!P||!R||!N)return;
+let emi0=P*R*Math.pow(1+R,N)/(Math.pow(1+R,N)-1),tp0=emi0*N,ti0=tp0-P;
+// original timeline (no prepayments)
+let bal0=P;yd0=[];let cy0={y:1,pr:0,in:0,to:0,mo:[]};
+for(let m=1;m<=N;m++){let ipm=bal0*R,prm=Math.min(emi0-ipm,bal0),emi=ipm+prm;bal0-=prm;cy0.pr+=prm;cy0.in+=ipm;cy0.to+=emi;cy0.mo.push({mth:m});
+if(m%12===0||bal0<=0.01){yd0.push({...cy0});if(bal0>0.01)cy0={y:Math.floor(m/12)+1,pr:0,in:0,to:0,mo:[]}}}
+// with prepayments
+let bal=P,totPrep=0,ti=0,tp=0;yd=[];let cy={y:1,pr:0,in:0,to:0,mo:[]};const preps=getPreps();
+for(let m=1;m<=N*2;m++){if(bal<=0.01)break;
+let ipm=bal*R,prm=Math.min(emi0-ipm,bal),emi=ipm+prm;bal-=prm;
+let ppMonth=0;preps.forEach(pr=>{let apply=pr.f===0?pr.m===m:(pr.m<=m&&((m-pr.m)%pr.f===0));if(apply){let ap=Math.min(pr.a,bal);bal-=ap;ppMonth+=ap;totPrep+=ap;}});
+ti+=ipm;tp+=emi+ppMonth;cy.pr+=prm;cy.in+=ipm;cy.to+=emi+ppMonth;
+cy.mo.push({e:emi,p:prm,i:ipm,b:bal,pp:ppMonth,mth:m});
+if(m%12===0||bal<=0.01){yd.push({...cy});if(bal>0.01)cy={y:Math.floor(m/12)+1,pr:0,in:0,to:0,mo:[]}}}
+let actualMonths=yd.reduce((s,y)=>s+y.mo.length,0);
+document.getElementById('emi').textContent=fc(emi0);document.getElementById('ti').textContent=fc(ti);document.getElementById('tp').textContent=fc(tp);
+let ip=(ti/tp*100).toFixed(1);document.getElementById('ip').textContent=ip+'%';
+document.getElementById('pc').setAttribute('stroke-dasharray',ip+' '+(100-ip));
+document.getElementById('pl').textContent=fc(P);document.getElementById('il').textContent=fc(ti);
+if(totPrep>0){let saved=ti0-ti;document.getElementById('saved').textContent=fc(saved);document.getElementById('tenRed').textContent=(N-actualMonths)+' mo ('+(N/12-(actualMonths/12)).toFixed(1)+' yr)';document.getElementById('savedRow').style.display='grid';const freqLabels={0:'One Time',1:'Monthly',3:'Quarterly',6:'Half-yearly',12:'Yearly'};document.getElementById('prepTableBody').innerHTML=preps.map((pr,i)=>`<tr class="border-b border-slate-100${i%2?' bg-slate-50':''}"><td class="px-5 py-3">${i+1}</td><td class="px-5 py-3 font-medium">${fmtMY(pr.m)}</td><td class="px-5 py-3">${freqLabels[pr.f]||'One Time'}</td><td class="px-5 py-3 text-right font-bold text-amber-600">${fc(pr.a)}</td></tr>`).join('');document.getElementById('prepTableSection').style.display='block';}
+else{document.getElementById('savedRow').style.display='none';document.getElementById('prepTableSection').style.display='none';}
+let totalPr=yd.reduce((s,y)=>s+y.pr,0),totalIn=yd.reduce((s,y)=>s+y.in,0),totalTo=yd.reduce((s,y)=>s+y.to,0),totalPP=yd.reduce((s,y)=>s+y.mo.reduce((ms,m)=>ms+m.pp,0),0),finalBal=yd[yd.length-1]?.mo[yd[yd.length-1].mo.length-1]?.b||0;document.getElementById('yt').innerHTML=yd.map((y,i)=>{let yrPP=y.mo.reduce((s,m)=>s+m.pp,0);return`<tr class="border-b border-slate-100 hover:bg-indigo-50 cursor-pointer" onclick="sm(${i})"><td class="px-3 py-3 font-medium">${yrLabel(y.y-1)}</td><td class="px-3 py-3 text-right text-emerald-600">${fc(y.pr)}</td><td class="px-3 py-3 text-right text-rose-500">${fc(y.in)}</td><td class="px-3 py-3 text-right text-amber-600 font-medium">${yrPP?fc(yrPP):'-'}</td><td class="px-3 py-3 text-right font-medium">${fc(y.to)}</td><td class="px-3 py-3 text-right text-slate-500">${fc(y.mo[y.mo.length-1].b)}</td></tr>`;}).join('')+`<tr class="bg-slate-100 font-bold border-t-2 border-slate-300"><td class="px-3 py-3">TOTAL</td><td class="px-3 py-3 text-right text-emerald-700">${fc(totalPr)}</td><td class="px-3 py-3 text-right text-rose-700">${fc(totalIn)}</td><td class="px-3 py-3 text-right text-amber-700">${totalPP?fc(totalPP):'-'}</td><td class="px-3 py-3 text-right text-indigo-700">${fc(totalTo)}</td><td class="px-3 py-3 text-right text-slate-700">${fc(finalBal)}</td></tr>`;
+document.getElementById('res').style.display='';setTimeout(drawChart,50);
+}
+function sm(i){
+let y=yd[i];document.getElementById('mt').textContent=yrLabel(y.y-1)+' — Monthly Details';document.getElementById('ms').textContent=y.mo.length+' months | Total: '+fc(y.to);
+document.getElementById('mtb').innerHTML=y.mo.map((m,j)=>`<tr class="border-b border-slate-100"><td class="px-5 py-3">${fmtMY(m.mth)}${m.pp?' <span class="text-amber-600 text-xs font-bold">(+'+sym()+m.pp.toLocaleString(loc())+' prepay)</span>':''}</td><td class="px-5 py-3 text-right font-medium">${fc(m.e)}</td><td class="px-5 py-3 text-right text-emerald-600">${fc(m.p)}</td><td class="px-5 py-3 text-right text-rose-500">${fc(m.i)}</td><td class="px-5 py-3 text-right text-slate-500">${fc(m.b)}</td></tr>`).join('');
+document.getElementById('mdl').classList.remove('hidden');
+}
+function cm(){document.getElementById('mdl').classList.add('hidden')}
+function resetAll(){document.getElementById('P').value='';document.getElementById('R').value='';document.getElementById('N').value='';document.getElementById('START').value='';document.getElementById('preps').innerHTML='';prepCount=0;document.getElementById('res').style.display='none';}
+function updPrepLabel(id){const d=document.getElementById(id),a=d.querySelector('.prepA').value,m=d.querySelector('.prepM'),f=d.querySelector('.prepF');const mtxt=m.options[m.selectedIndex]?.text||'';const ftxt=f.options[f.selectedIndex]?.text||'';const lid=id.replace('pr','lbl');document.getElementById(lid).textContent=a?`${sym()}${a} on ${mtxt} (${ftxt})`:'Prepayment details';}
+function drawChart(){
+const c=document.getElementById('chart'),ctx=c.getContext('2d'),dpr=window.devicePixelRatio||1;
+const rect=c.getBoundingClientRect();c.width=rect.width*dpr;c.height=rect.height*dpr;ctx.scale(dpr,dpr);
+const W=rect.width,H=rect.height,M={t:30,r:20,b:50,l:60},w=W-M.l-M.r,h=H-M.t-M.b;
+const maxYrs=Math.max(yd0.length,yd.length);
+const maxT=Math.max(yd0[0]?.to||0,...yd.map(y=>y.to)),maxB=P;
+const topY=t=>M.t+h-(t/maxT)*h*0.75,topB=b=>M.t+h-(b/maxB)*h*0.75;
+ctx.clearRect(0,0,W,H);
+// grid
+ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;
+for(let i=0;i<=4;i++){let y=M.t+(h*i/4);ctx.beginPath();ctx.moveTo(M.l,y);ctx.lineTo(W-M.r,y);ctx.stroke();}
+// bars - grouped by year (original left, new right)
+const sp=w/maxYrs,bw=sp*0.35;
+for(let i=0;i<maxYrs;i++){
+let x0=M.l+i*sp+sp*0.1,x1=x0+bw*1.2;
+let y0=yd0[i],y1=yd[i];
+// original (faded)
+if(y0){let ph=(y0.pr/maxT)*h*0.75,ih=(y0.in/maxT)*h*0.75;ctx.fillStyle='#a7f3d0';ctx.fillRect(x0,topY(y0.to)+ih,bw,ph);ctx.fillStyle='#fecdd3';ctx.fillRect(x0,topY(y0.to),bw,ih);}
+// new (vibrant)
+if(y1){let ph=(y1.pr/maxT)*h*0.75,ih=(y1.in/maxT)*h*0.75;ctx.fillStyle='#10b981';ctx.fillRect(x1,topY(y1.to)+ih,bw,ph);ctx.fillStyle='#f43f5e';ctx.fillRect(x1,topY(y1.to),bw,ih);}
+// year label
+ctx.fillStyle='#64748b';ctx.font='10px sans-serif';ctx.textAlign='center';
+const s=getStart();const ly=new Date(s.getFullYear(),s.getMonth()+i*12,1);ctx.fillText(ly.getFullYear(),x0+bw*1.1,H-12);
+}
+// original balance line (dashed gray)
+ctx.strokeStyle='#94a3b8';ctx.lineWidth=2;ctx.setLineDash([5,5]);ctx.beginPath();
+yd0.forEach((y,i)=>{let x=M.l+i*sp+sp*0.1+bw/2,b=topB(P-y.pr-y.in+y.mo[y.mo.length-1]?.b||0);let bal=P;for(let k=0;k<=i;k++)bal-=yd0[k].pr;if(i===0)ctx.moveTo(x,topB(bal));else ctx.lineTo(x,topB(bal));});
+ctx.stroke();ctx.setLineDash([]);
+// new balance line (solid indigo)
+ctx.strokeStyle='#4f46e5';ctx.lineWidth=2;ctx.beginPath();
+yd.forEach((y,i)=>{let x=M.l+i*sp+sp*0.1+bw*1.2+bw/2,b=topB(y.mo[y.mo.length-1].b);if(i===0)ctx.moveTo(x,b);else ctx.lineTo(x,b);});
+ctx.stroke();
+// balance points (new only)
+yd.forEach((y,i)=>{let x=M.l+i*sp+sp*0.1+bw*1.2+bw/2,b=topB(y.mo[y.mo.length-1].b);ctx.fillStyle='#4f46e5';ctx.beginPath();ctx.arc(x,b,3,0,Math.PI*2);ctx.fill();});
+// axis labels
+ctx.fillStyle='#64748b';ctx.font='10px sans-serif';ctx.textAlign='right';ctx.textBaseline='middle';
+for(let i=0;i<=4;i++){let v=(maxT*i/4)/1000;ctx.fillText((v<1?v.toFixed(1)+'K':Math.round(v)+'K'),M.l-8,M.t+h-(h*i/4));}
+ctx.textAlign='left';
+for(let i=0;i<=4;i++){let v=(maxB*i/4)/1000;ctx.fillText((v<1?v.toFixed(1)+'K':Math.round(v)+'K'),W-M.r+4,M.t+h-(h*i/4));}
+}
+</script>
+</body>
+</html>
