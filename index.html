@@ -13,7 +13,7 @@
 <div class="g py-10 px-4 text-center text-white"><h1 class="text-3xl font-bold">Home Loan EMI Calculator</h1></div>
 <div class="max-w-6xl mx-auto px-4 -mt-6">
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-<div class="lg:col-span-1">
+<div class="lg:col-span-1 no-print">
 <div class="bg-white rounded-xl c p-5">
 <h2 class="font-semibold mb-4">Loan Details</h2>
 <form onsubmit="event.preventDefault();calc()">
@@ -23,13 +23,21 @@
 <div><label class="text-sm text-slate-600">Interest Rate (%/year)</label><input type="number" id="R" value="7.5" step="0.1" class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 outline-none"></div>
 <div><label class="text-sm text-slate-600">Tenure (Years)</label><input type="number" id="N" value="10" class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 outline-none"></div>
 <div><label class="text-sm text-slate-600">Loan Start Month</label><input type="month" id="START" min="2024-01" class="w-full mt-1 px-3 py-2 border rounded-lg focus:ring-2 focus:ring-indigo-200 outline-none bg-white"></div>
-<div class="pt-1"><div class="flex items-center justify-between mb-2"><label class="text-sm font-medium text-slate-700">Prepayments</label><button type="button" onclick="addPrep()" class="text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded hover:bg-indigo-100">+ Add</button></div><div id="preps" class="space-y-2"></div></div>
-<div class="flex gap-2"><button type="submit" class="flex-1 g text-white font-semibold py-2.5 rounded-lg hover:opacity-90">Recalcuate Loan</button><button type="button" onclick="window.print()" class="px-4 py-2.5 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 font-medium" title="Print / Save as PDF">🖨️</button><button type="button" onclick="resetAll()" class="px-4 py-2.5 bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-100 font-medium" title="Reset All">↺</button></div>
+<div class="pt-1"><div class="flex items-center justify-between mb-2"><label class="text-sm font-medium text-slate-700">Prepayments</label><button type="button" onclick="addPrep()" class="text-xs bg-indigo-50 text-indigo-700 px-2 py-1 rounded hover:bg-indigo-100">+ Add</button></div><div id="preps" class="space-y-2">
+<div id="pr1" class="space-y-1.5 border border-slate-100 rounded-lg p-2 bg-slate-50"><div class="flex gap-2 items-center"><input type="number" value="50000" class="flex-1 px-2 py-1.5 border rounded text-sm outline-none prepA"><button type="button" onclick="document.getElementById('preps').removeChild(document.getElementById('pr1'))" class="text-rose-500 hover:text-rose-700 text-sm font-bold px-1 no-print">&times;</button></div><div class="flex gap-2 items-center no-print"><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepM"><option value="3" selected>Aug 2025</option></select><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepF"><option value="0" selected>One Time</option></select></div><div class="print-only text-sm text-slate-600 mt-1">50000 on Aug 2025 (One Time)</div></div>
+<div id="pr2" class="space-y-1.5 border border-slate-100 rounded-lg p-2 bg-slate-50"><div class="flex gap-2 items-center"><input type="number" value="50000" class="flex-1 px-2 py-1.5 border rounded text-sm outline-none prepA"><button type="button" onclick="document.getElementById('preps').removeChild(document.getElementById('pr2'))" class="text-rose-500 hover:text-rose-700 text-sm font-bold px-1 no-print">&times;</button></div><div class="flex gap-2 items-center no-print"><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepM"><option value="3" selected>Aug 2025</option></select><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepF"><option value="0" selected>One Time</option></select></div><div class="print-only text-sm text-slate-600 mt-1">50000 on Aug 2025 (One Time)</div></div>
+<div id="pr3" class="space-y-1.5 border border-slate-100 rounded-lg p-2 bg-slate-50"><div class="flex gap-2 items-center"><input type="number" value="30997" class="flex-1 px-2 py-1.5 border rounded text-sm outline-none prepA"><button type="button" onclick="document.getElementById('preps').removeChild(document.getElementById('pr3'))" class="text-rose-500 hover:text-rose-700 text-sm font-bold px-1 no-print">&times;</button></div><div class="flex gap-2 items-center no-print"><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepM"><option value="6" selected>Nov 2025</option></select><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepF"><option value="0" selected>One Time</option></select></div><div class="print-only text-sm text-slate-600 mt-1">30997 on Nov 2025 (One Time)</div></div>
+<div id="pr4" class="space-y-1.5 border border-slate-100 rounded-lg p-2 bg-slate-50"><div class="flex gap-2 items-center"><input type="number" value="47700" class="flex-1 px-2 py-1.5 border rounded text-sm outline-none prepA"><button type="button" onclick="document.getElementById('preps').removeChild(document.getElementById('pr4'))" class="text-rose-500 hover:text-rose-700 text-sm font-bold px-1 no-print">&times;</button></div><div class="flex gap-2 items-center no-print"><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepM"><option value="7" selected>Dec 2025</option></select><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepF"><option value="0" selected>One Time</option></select></div><div class="print-only text-sm text-slate-600 mt-1">47700 on Dec 2025 (One Time)</div></div>
+<div id="pr5" class="space-y-1.5 border border-slate-100 rounded-lg p-2 bg-slate-50"><div class="flex gap-2 items-center"><input type="number" value="50000" class="flex-1 px-2 py-1.5 border rounded text-sm outline-none prepA"><button type="button" onclick="document.getElementById('preps').removeChild(document.getElementById('pr5'))" class="text-rose-500 hover:text-rose-700 text-sm font-bold px-1 no-print">&times;</button></div><div class="flex gap-2 items-center no-print"><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepM"><option value="9" selected>Feb 2026</option></select><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepF"><option value="0" selected>One Time</option></select></div><div class="print-only text-sm text-slate-600 mt-1">50000 on Feb 2026 (One Time)</div></div>
+<div id="pr6" class="space-y-1.5 border border-slate-100 rounded-lg p-2 bg-slate-50"><div class="flex gap-2 items-center"><input type="number" value="500000" class="flex-1 px-2 py-1.5 border rounded text-sm outline-none prepA"><button type="button" onclick="document.getElementById('preps').removeChild(document.getElementById('pr6'))" class="text-rose-500 hover:text-rose-700 text-sm font-bold px-1 no-print">&times;</button></div><div class="flex gap-2 items-center no-print"><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepM"><option value="11" selected>Apr 2026</option></select><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepF"><option value="0" selected>One Time</option></select></div><div class="print-only text-sm text-slate-600 mt-1">500000 on Apr 2026 (One Time)</div></div>
+<div id="pr7" class="space-y-1.5 border border-slate-100 rounded-lg p-2 bg-slate-50"><div class="flex gap-2 items-center"><input type="number" value="70000" class="flex-1 px-2 py-1.5 border rounded text-sm outline-none prepA"><button type="button" onclick="document.getElementById('preps').removeChild(document.getElementById('pr7'))" class="text-rose-500 hover:text-rose-700 text-sm font-bold px-1 no-print">&times;</button></div><div class="flex gap-2 items-center no-print"><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepM"><option value="12" selected>May 2026</option></select><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepF"><option value="0" selected>One Time</option></select></div><div class="print-only text-sm text-slate-600 mt-1">70000 on May 2026 (One Time)</div></div>
+</div></div>
+<div class="flex gap-2"><button type="button" onclick="calc()" class="flex-1 g text-white font-semibold py-2.5 rounded-lg hover:opacity-90">Calculate EMI</button><button type="button" onclick="window.print()" class="px-4 py-2.5 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 font-medium" title="Print / Save as PDF">🖨️</button><button type="button" onclick="resetAll()" class="px-4 py-2.5 bg-rose-50 text-rose-600 rounded-lg hover:bg-rose-100 font-medium" title="Reset All">↺</button></div>
 </div>
 </form>
 </div>
 </div>
-<div class="lg:col-span-2 space-y-5" id="res" style="display:none">
+<div class="lg:col-span-2 space-y-5" id="res">
 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
 <div class="bg-white rounded-xl c p-5 text-center"><p class="text-xs text-slate-500">Monthly EMI</p><p class="text-xl font-bold text-indigo-600" id="emi">$0</p></div>
 <div class="bg-white rounded-xl c p-5 text-center"><p class="text-xs text-slate-500">Total Interest</p><p class="text-xl font-bold text-rose-500" id="ti">$0</p></div>
@@ -47,9 +55,9 @@
 </div>
 </div>
 <div class="bg-white rounded-xl c p-5">
-<h3 class="font-semibold mb-3">Timeline — Principal, Interest & Balance</h3>
-<div class="relative w-full" style="height:320px"><canvas id="chart" class="w-full h-full"></canvas></div>
-<div class="flex justify-center gap-3 mt-3 text-xs flex-wrap"><span class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-emerald-200"></span><span class="w-3 h-3 rounded-sm bg-emerald-500"></span>Principal</span><span class="flex items-center gap-1"><span class="w-3 h-3 rounded-sm bg-rose-200"></span><span class="w-3 h-3 rounded-sm bg-rose-500"></span>Interest</span><span class="flex items-center gap-1"><span class="w-3 h-3 rounded-full bg-slate-400"></span><span class="w-3 h-3 rounded-full bg-indigo-600"></span>Balance</span><span class="text-slate-400">(faded=original, bright=with prepay)</span></div>
+<h3 class="font-semibold mb-3">Loan Amortization Timeline</h3>
+<div class="relative w-full" style="height:400px"><canvas id="chart" class="w-full h-full"></canvas></div>
+<p class="text-xs text-slate-400 text-center mt-2">Stacked bars show yearly Principal (green) + Interest (pink). Purple line shows Outstanding Balance.</p>
 </div>
 <div id="prepTableSection" class="bg-white rounded-xl c overflow-hidden" style="display:none">
 <div class="p-5 border-b border-slate-100"><h3 class="font-semibold text-amber-600">Prepayment Summary</h3><p class="text-xs text-slate-500 mt-1">All prepayments scheduled</p></div>
@@ -61,7 +69,6 @@
 <div class="p-5 border-b border-slate-100"><h3 class="font-semibold">Year-wise Breakdown</h3><p class="text-xs text-slate-500 mt-1">Click a row for monthly details</p></div>
 <div class="overflow-x-auto">
 <table class="w-full text-sm"><thead><tr class="bg-slate-50 text-slate-600 text-left"><th class="px-3 py-3 font-medium w-1/4">Year</th><th class="px-3 py-3 font-medium text-right">Principal</th><th class="px-3 py-3 font-medium text-right">Interest</th><th class="px-3 py-3 font-medium text-right w-28">Prepay</th><th class="px-3 py-3 font-medium text-right">Total</th><th class="px-3 py-3 font-medium text-right">Balance</th></tr></thead><tbody id="yt"></tbody></table>
-</div>
 </div>
 </div>
 </div>
@@ -81,13 +88,21 @@ function sym(){const c=cur();return c==='INR'?'₹':c==='AUD'?'A$':'$'}
 function loc(){const c=cur();return c==='INR'?'en-IN':c==='AUD'?'en-AU':'en-US'}
 function fc(n){return sym()+n.toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2})}
 function updCur(){const c=cur();document.getElementById('LP').textContent='Loan Amount ('+sym()+')';if(c==='INR')document.getElementById('P').value=4000000;else if(c==='AUD')document.getElementById('P').value=600000;else document.getElementById('P').value=300000;}
-(function init(){document.getElementById('START').value='2025-06';document.getElementById('LP').textContent='Loan Amount (₹)';setTimeout(()=>{addDefPrep(50000,3);addDefPrep(50000,3);addDefPrep(30997,6);addDefPrep(47700,7);addDefPrep(50000,9);addDefPrep(500000,11);addDefPrep(70000,12);},0);})();
+let prepCount=7;
+document.addEventListener('DOMContentLoaded',function(){
+document.getElementById('START').value='2025-06';
+document.getElementById('P').value=4000000;
+document.getElementById('R').value=7.5;
+document.getElementById('N').value=10;
+document.getElementById('CUR').value='INR';
+document.getElementById('LP').textContent='Loan Amount (₹)';
+calc();
+});
 function addDefPrep(amt,mNum){prepCount++;const s=getStart();const dte=new Date(s.getFullYear(),s.getMonth()+mNum-1,1);const dteStr=dte.toLocaleString('en-US',{month:'short',year:'numeric'});const d=document.createElement('div');d.id='pr'+prepCount;d.className='space-y-1.5 border border-slate-100 rounded-lg p-2 bg-slate-50';d.innerHTML=`<div class="flex gap-2 items-center"><input type="number" value="${amt}" placeholder="Amount" class="flex-1 px-2 py-1.5 border rounded text-sm outline-none prepA"><button type="button" onclick="document.getElementById('preps').removeChild(document.getElementById('pr${prepCount}'))" class="text-rose-500 hover:text-rose-700 text-sm font-bold px-1 no-print">&times;</button></div><div class="flex gap-2 items-center no-print"><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepM">${genMonths()}</select><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepF"><option value="0" selected>One Time</option><option value="1">Monthly</option><option value="3">Quarterly</option><option value="6">Half-yearly</option><option value="12">Yearly</option></select></div><div class="print-only text-sm text-slate-600 mt-1">${sym()}${amt} on ${dteStr} (One Time)</div>`;document.getElementById('preps').appendChild(d);setTimeout(()=>{const opts=d.querySelector('.prepM');for(let i=0;i<opts.options.length;i++){if(opts.options[i].value==mNum){opts.selectedIndex=i;break;}}},0);}
 function getStart(){const v=document.getElementById('START').value||new Date().toISOString().slice(0,7);const [y,m]=v.split('-').map(Number);return new Date(y,m-1,1);}
 function fmtMonth(d){return d.toLocaleString('en-US',{month:'short',year:'numeric'});}
 function fmtMY(mNum){const s=getStart();const d=new Date(s.getFullYear(),s.getMonth()+mNum-1,1);return fmtMonth(d);}
 function yrLabel(yi){const s=getStart();const sy=new Date(s.getFullYear(),s.getMonth()+yi*12,1);const ey=new Date(sy.getFullYear(),sy.getMonth()+11,1);return fmtMonth(sy)+' - '+fmtMonth(ey);}
-let prepCount=0;
 function genMonths(){const N=+document.getElementById('N').value*12||240;let opts='';for(let m=1;m<=N;m++){opts+=`<option value="${m}">${fmtMY(m)}</option>`;}return opts;}
 function addPrep(){prepCount++;const d=document.createElement('div');d.id='pr'+prepCount;d.className='space-y-1.5 border border-slate-100 rounded-lg p-2 bg-slate-50';d.innerHTML=`<div class="flex gap-2 items-center"><input type="number" placeholder="Amount" class="flex-1 px-2 py-1.5 border rounded text-sm outline-none prepA" oninput="updPrepLabel('pr${prepCount}')"><button type="button" onclick="document.getElementById('preps').removeChild(document.getElementById('pr${prepCount}'))" class="text-rose-500 hover:text-rose-700 text-sm font-bold px-1 no-print">&times;</button></div><div class="flex gap-2 items-center no-print"><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepM" onchange="updPrepLabel('pr${prepCount}')"><option value="">Select Month</option>${genMonths()}</select><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepF" onchange="updPrepLabel('pr${prepCount}')"><option value="0">One Time</option><option value="1">Monthly</option><option value="3">Quarterly</option><option value="6">Half-yearly</option><option value="12">Yearly</option></select></div><div class="print-only text-sm text-slate-600 mt-1" id="lbl${prepCount}">Prepayment details</div>`;document.getElementById('preps').appendChild(d);}
 function getPreps(){const rows=document.querySelectorAll('#preps > div'),preps=[];rows.forEach(r=>{const a=+r.querySelector('.prepA').value,m=+r.querySelector('.prepM').value,f=+r.querySelector('.prepF').value;if(a&&m)preps.push({a,m,f})});return preps;}
@@ -128,42 +143,107 @@ function updPrepLabel(id){const d=document.getElementById(id),a=d.querySelector(
 function drawChart(){
 const c=document.getElementById('chart'),ctx=c.getContext('2d'),dpr=window.devicePixelRatio||1;
 const rect=c.getBoundingClientRect();c.width=rect.width*dpr;c.height=rect.height*dpr;ctx.scale(dpr,dpr);
-const W=rect.width,H=rect.height,M={t:30,r:20,b:50,l:60},w=W-M.l-M.r,h=H-M.t-M.b;
+const W=rect.width,H=rect.height,M={t:50,r:70,b:70,l:80},w=W-M.l-M.r,h=H-M.t-M.b;
 const maxYrs=Math.max(yd0.length,yd.length);
-const maxT=Math.max(yd0[0]?.to||0,...yd.map(y=>y.to)),maxB=P;
-const topY=t=>M.t+h-(t/maxT)*h*0.75,topB=b=>M.t+h-(b/maxB)*h*0.75;
+const maxT=Math.max(yd0[0]?.to||0,...yd.map(y=>y.to))*1.1,maxB=+document.getElementById('P').value||4000000;
+const topY=t=>M.t+h-(t/maxT)*h,topB=b=>M.t+h-(b/maxB)*h;
 ctx.clearRect(0,0,W,H);
-// grid
+// background gradient
+const grad=ctx.createLinearGradient(M.l,M.t,M.l,M.t+h);grad.addColorStop(0,'#f8fafc');grad.addColorStop(1,'#f1f5f9');ctx.fillStyle=grad;ctx.fillRect(M.l,M.t,w,h);
+// horizontal grid lines with labels
+ctx.strokeStyle='#cbd5e1';ctx.lineWidth=1;ctx.setLineDash([2,2]);
+for(let i=0;i<=5;i++){let y=M.t+(h*i/5);ctx.beginPath();ctx.moveTo(M.l,y);ctx.lineTo(W-M.r,y);ctx.stroke();}
+ctx.setLineDash([]);
+// vertical year lines
 ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;
-for(let i=0;i<=4;i++){let y=M.t+(h*i/4);ctx.beginPath();ctx.moveTo(M.l,y);ctx.lineTo(W-M.r,y);ctx.stroke();}
-// bars - grouped by year (original left, new right)
-const sp=w/maxYrs,bw=sp*0.35;
+for(let i=0;i<maxYrs;i++){let x=M.l+i*(w/maxYrs)+(w/maxYrs)/2;ctx.beginPath();ctx.moveTo(x,M.t);ctx.lineTo(x,H-M.b);ctx.stroke();}
+// yearly payment bars - wider with gradient
+const sp=w/maxYrs,bw=sp*0.75;
 for(let i=0;i<maxYrs;i++){
-let x0=M.l+i*sp+sp*0.1,x1=x0+bw*1.2;
-let y0=yd0[i],y1=yd[i];
-// original (faded)
-if(y0){let ph=(y0.pr/maxT)*h*0.75,ih=(y0.in/maxT)*h*0.75;ctx.fillStyle='#a7f3d0';ctx.fillRect(x0,topY(y0.to)+ih,bw,ph);ctx.fillStyle='#fecdd3';ctx.fillRect(x0,topY(y0.to),bw,ih);}
-// new (vibrant)
-if(y1){let ph=(y1.pr/maxT)*h*0.75,ih=(y1.in/maxT)*h*0.75;ctx.fillStyle='#10b981';ctx.fillRect(x1,topY(y1.to)+ih,bw,ph);ctx.fillStyle='#f43f5e';ctx.fillRect(x1,topY(y1.to),bw,ih);}
-// year label
-ctx.fillStyle='#64748b';ctx.font='10px sans-serif';ctx.textAlign='center';
-const s=getStart();const ly=new Date(s.getFullYear(),s.getMonth()+i*12,1);ctx.fillText(ly.getFullYear(),x0+bw*1.1,H-12);
+let x=M.l+i*sp+(sp-bw)/2;
+// draw original payment (greyed out) - left half
+let y0=yd0[i];
+if(y0){
+let ph0=(y0.pr/maxT)*h,ih0=(y0.in/maxT)*h;
+let yBase0=topY(y0.to);
+// grey interest
+ctx.fillStyle='#d1d5db';ctx.fillRect(x,yBase0,bw/2-1,ih0);
+// grey principal
+ctx.fillStyle='#9ca3af';ctx.fillRect(x,yBase0+ih0,bw/2-1,ph0);
 }
-// original balance line (dashed gray)
-ctx.strokeStyle='#94a3b8';ctx.lineWidth=2;ctx.setLineDash([5,5]);ctx.beginPath();
-yd0.forEach((y,i)=>{let x=M.l+i*sp+sp*0.1+bw/2,b=topB(P-y.pr-y.in+y.mo[y.mo.length-1]?.b||0);let bal=P;for(let k=0;k<=i;k++)bal-=yd0[k].pr;if(i===0)ctx.moveTo(x,topB(bal));else ctx.lineTo(x,topB(bal));});
-ctx.stroke();ctx.setLineDash([]);
-// new balance line (solid indigo)
-ctx.strokeStyle='#4f46e5';ctx.lineWidth=2;ctx.beginPath();
-yd.forEach((y,i)=>{let x=M.l+i*sp+sp*0.1+bw*1.2+bw/2,b=topB(y.mo[y.mo.length-1].b);if(i===0)ctx.moveTo(x,b);else ctx.lineTo(x,b);});
-ctx.stroke();
-// balance points (new only)
-yd.forEach((y,i)=>{let x=M.l+i*sp+sp*0.1+bw*1.2+bw/2,b=topB(y.mo[y.mo.length-1].b);ctx.fillStyle='#4f46e5';ctx.beginPath();ctx.arc(x,b,3,0,Math.PI*2);ctx.fill();});
-// axis labels
-ctx.fillStyle='#64748b';ctx.font='10px sans-serif';ctx.textAlign='right';ctx.textBaseline='middle';
-for(let i=0;i<=4;i++){let v=(maxT*i/4)/1000;ctx.fillText((v<1?v.toFixed(1)+'K':Math.round(v)+'K'),M.l-8,M.t+h-(h*i/4));}
-ctx.textAlign='left';
-for(let i=0;i<=4;i++){let v=(maxB*i/4)/1000;ctx.fillText((v<1?v.toFixed(1)+'K':Math.round(v)+'K'),W-M.r+4,M.t+h-(h*i/4));}
+// draw revised payment (colors) - right half
+let y1=yd[i];
+if(y1){
+let ph=(y1.pr/maxT)*h,ih=(y1.in/maxT)*h;
+let yBase=topY(y1.to);
+// interest gradient
+const ig=ctx.createLinearGradient(x+bw/2,yBase,x+bw/2,yBase+ih);ig.addColorStop(0,'#fca5a5');ig.addColorStop(1,'#f87171');ctx.fillStyle=ig;ctx.fillRect(x+bw/2,yBase,bw/2,ih);
+// principal gradient
+const pg=ctx.createLinearGradient(x+bw/2,yBase+ih,x+bw/2,yBase+ih+ph);pg.addColorStop(0,'#6ee7b7');pg.addColorStop(1,'#34d399');ctx.fillStyle=pg;ctx.fillRect(x+bw/2,yBase+ih,bw/2,ph);
+// bar shadow
+ctx.fillStyle='rgba(0,0,0,0.1)';ctx.fillRect(x+bw/2+2,yBase+2,bw/2,ih+ph);
+// bar border
+ctx.strokeStyle='#fff';ctx.lineWidth=1;ctx.strokeRect(x+bw/2,yBase,bw/2,ih+ph);
+}
+// year label background
+ctx.fillStyle='#fff';ctx.fillRect(x+bw/2-20,H-M.b+5,40,20);
+// year label
+ctx.fillStyle='#475569';ctx.font='bold 11px sans-serif';ctx.textAlign='center';
+const s=getStart();const ly=new Date(s.getFullYear(),s.getMonth()+i*12,1);
+if(i%Math.ceil(maxYrs/6)===0||i===maxYrs-1)ctx.fillText(ly.getFullYear(),x+bw/2,H-M.b+18);
+}
+// balance line with glow
+ctx.shadowColor='rgba(99,102,241,0.5)';ctx.shadowBlur=10;ctx.strokeStyle='#4f46e5';ctx.lineWidth=4;ctx.lineCap='round';ctx.lineJoin='round';ctx.beginPath();
+let startB=topB(maxB);
+ctx.moveTo(M.l+sp/2,startB);
+yd.forEach((y,i)=>{let x=M.l+i*sp+sp/2,b=topB(y.mo[y.mo.length-1].b);if(i===0){let cpX=(M.l+sp/2+x)/2;ctx.bezierCurveTo(cpX,startB,cpX,b,x,b);}else{let prevX=M.l+(i-1)*sp+sp/2,prevB=topB(yd[i-1].mo[yd[i-1].mo.length-1].b);let cpX=(prevX+x)/2;ctx.bezierCurveTo(cpX,prevB,cpX,b,x,b);}});
+ctx.stroke();ctx.shadowBlur=0;
+// balance area fill gradient
+const bg=ctx.createLinearGradient(M.l,M.t,M.l,M.t+h);bg.addColorStop(0,'rgba(99,102,241,0.2)');bg.addColorStop(1,'rgba(99,102,241,0.05)');ctx.fillStyle=bg;
+ctx.beginPath();ctx.moveTo(M.l+sp/2,startB);
+yd.forEach((y,i)=>{let x=M.l+i*sp+sp/2,b=topB(y.mo[y.mo.length-1].b);if(i===0){let cpX=(M.l+sp/2+x)/2;ctx.bezierCurveTo(cpX,startB,cpX,b,x,b);}else{let prevX=M.l+(i-1)*sp+sp/2,prevB=topB(yd[i-1].mo[yd[i-1].mo.length-1].b);let cpX=(prevX+x)/2;ctx.bezierCurveTo(cpX,prevB,cpX,b,x,b);}});
+ctx.lineTo(M.l+(yd.length-1)*sp+sp/2,M.t+h);ctx.lineTo(M.l+sp/2,M.t+h);ctx.closePath();ctx.fill();
+// key balance points with labels - including start point at 40L
+// start point (40L)
+ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(M.l+sp/2,startB,8,0,Math.PI*2);ctx.fill();
+ctx.strokeStyle='#4f46e5';ctx.lineWidth=2;ctx.stroke();
+ctx.fillStyle='#4f46e5';ctx.beginPath();ctx.arc(M.l+sp/2,startB,4,0,Math.PI*2);ctx.fill();
+ctx.fillStyle='#1e293b';ctx.font='bold 10px sans-serif';ctx.textAlign='center';
+ctx.fillText((maxB/100000).toFixed(1)+'L',M.l+sp/2,startB-15);
+// other key points
+yd.forEach((y,i)=>{
+if(i===Math.floor(yd.length/2)||i===yd.length-1){
+let x=M.l+i*sp+sp/2,b=topB(y.mo[y.mo.length-1].b);
+// outer circle
+ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,b,8,0,Math.PI*2);ctx.fill();
+ctx.strokeStyle='#4f46e5';ctx.lineWidth=2;ctx.stroke();
+// inner circle
+ctx.fillStyle='#4f46e5';ctx.beginPath();ctx.arc(x,b,4,0,Math.PI*2);ctx.fill();
+// value label
+ctx.fillStyle='#1e293b';ctx.font='bold 10px sans-serif';ctx.textAlign='center';
+let balL=(y.mo[y.mo.length-1].b/100000).toFixed(1)+'L';ctx.fillText(balL,x,b-15);
+}
+});
+// y-axis left - balance
+ctx.fillStyle='#64748b';ctx.font='11px sans-serif';ctx.textAlign='right';ctx.textBaseline='middle';
+for(let i=0;i<=5;i++){let v=(maxB*i/5)/100000;ctx.fillText('₹'+v.toFixed(1)+'L',M.l-12,M.t+h-(h*i/5));}
+// y-axis left title
+ctx.save();ctx.translate(20,M.t+h/2);ctx.rotate(-Math.PI/2);ctx.textAlign='center';ctx.font='bold 12px sans-serif';ctx.fillStyle='#475569';ctx.fillText('Balance',0,0);ctx.restore();
+// y-axis right - payment
+ctx.textAlign='left';ctx.fillStyle='#64748b';
+for(let i=0;i<=5;i++){let v=(maxT*i/5)/100000;ctx.fillText('₹'+v.toFixed(1)+'L',W-M.r+10,M.t+h-(h*i/5));}
+// y-axis right title
+ctx.save();ctx.translate(W-20,M.t+h/2);ctx.rotate(Math.PI/2);ctx.textAlign='center';ctx.font='bold 12px sans-serif';ctx.fillStyle='#475569';ctx.fillText('Payment Paid in Year',0,0);ctx.restore();
+// x-axis title
+ctx.textAlign='center';ctx.fillStyle='#475569';ctx.font='bold 12px sans-serif';ctx.fillText('Loan Timeline (Years)',M.l+w/2,H-10);
+// legend box
+ctx.fillStyle='rgba(255,255,255,0.9)';ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;ctx.fillRect(W-M.r-180,M.t+5,175,70);ctx.strokeRect(W-M.r-180,M.t+5,175,70);
+// Principal legend
+ctx.fillStyle='#34d399';ctx.fillRect(W-M.r-170,M.t+15,15,15);ctx.fillStyle='#1f2937';ctx.font='12px sans-serif';ctx.textAlign='left';ctx.fillText('Principal',W-M.r-150,M.t+26);
+// Interest legend
+ctx.fillStyle='#fb7185';ctx.fillRect(W-M.r-170,M.t+38,15,15);ctx.fillStyle='#1f2937';ctx.fillText('Interest',W-M.r-150,M.t+49);
+// Balance legend
+ctx.strokeStyle='#4f46e5';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(W-M.r-90,M.t+22);ctx.lineTo(W-M.r-75,M.t+22);ctx.stroke();ctx.fillStyle='#1f2937';ctx.fillText('Balance',W-M.r-70,M.t+26);
 }
 </script>
 </body>
