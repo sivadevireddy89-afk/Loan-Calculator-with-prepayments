@@ -44,6 +44,15 @@
 <div class="bg-white rounded-xl c p-5 text-center"><p class="text-xs text-slate-500">Total Interest</p><p class="text-xl font-bold text-rose-500" id="ti">$0</p></div>
 <div class="bg-white rounded-xl c p-5 text-center"><p class="text-xs text-slate-500">Total Payment</p><p class="text-xl font-bold text-emerald-600" id="tp">$0</p></div>
 </div>
+<div class="bg-white rounded-xl c p-5">
+<h3 class="font-semibold mb-3 text-indigo-700">Loan Summary</h3>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+<div><p class="text-xs text-slate-500">Loan Amount Availed</p><p class="text-lg font-bold text-indigo-600" id="nextEmi">-</p></div>
+<div><p class="text-xs text-slate-500">Total Interest Payable</p><p class="text-lg font-bold text-rose-500" id="totInt">-</p></div>
+<div><p class="text-xs text-slate-500">Total Payment</p><p class="text-lg font-bold text-emerald-600" id="totPay">-</p></div>
+<div><p class="text-xs text-slate-500">Loan Ends On</p><p class="text-lg font-bold text-slate-700" id="loanEnd">-</p></div>
+</div>
+</div>
 <div id="savedRow" class="grid grid-cols-1 sm:grid-cols-2 gap-4" style="display:none">
 <div class="bg-white rounded-xl c p-5 text-center border-l-4 border-amber-400"><p class="text-xs text-slate-500">Interest Saved</p><p class="text-xl font-bold text-amber-500" id="saved">$0</p></div>
 <div class="bg-white rounded-xl c p-5 text-center border-l-4 border-sky-400"><p class="text-xs text-slate-500" id="tenRedLabel">Tenure Reduced</p><p class="text-xl font-bold text-sky-500" id="tenRed">0 mo</p></div>
@@ -141,6 +150,8 @@ cy.mo.push({e:emi,p:prm,i:ipm,b:bal,pp:ppMonth,mth:m,rate:curR*12*100});
 if(m%12===0||bal<=0.01){yd.push({...cy});if(bal>0.01)cy={y:Math.floor(m/12)+1,pr:0,in:0,to:0,mo:[]}}}
 let actualMonths=yd.reduce((s,y)=>s+y.mo.length,0);
 document.getElementById('emi').textContent=fc(emi0);document.getElementById('ti').textContent=fc(ti);document.getElementById('tp').textContent=fc(tp);
+document.getElementById('nextEmi').textContent=fc(P);document.getElementById('totInt').textContent=fc(ti);document.getElementById('totPay').textContent=fc(tp);
+let endMonth=yd[yd.length-1]?.mo[yd[yd.length-1].mo.length-1]?.mth||N;const s=getStart();const endDate=new Date(s.getFullYear(),s.getMonth()+endMonth,1);document.getElementById('loanEnd').textContent=fmtMonth(endDate);
 let ip=(ti/tp*100).toFixed(1);document.getElementById('ip').textContent=ip+'%';
 document.getElementById('pc').setAttribute('stroke-dasharray',ip+' '+(100-ip));
 document.getElementById('pl').textContent=fc(P);document.getElementById('il').textContent=fc(ti);
