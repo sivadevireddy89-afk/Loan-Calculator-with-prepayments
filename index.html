@@ -33,16 +33,32 @@ tr:nth-child(even){background:rgba(248,250,252,0.8)}
 @media print{body{background:white}.g{-webkit-print-color-adjust:exact;print-color-adjust:exact}#res{display:block!important}.c{box-shadow:none;border:1px solid #e2e8f0}canvas{max-height:360px}button,#preps select,.no-print{display:none}.print-only{display:block!important}input{border:none;padding:0;background:transparent}#preps .space-y-1\.5{border:1px solid #e2e8f0;padding:8px;margin-bottom:8px}}
 .print-only{display:none}
 </style>
+<style>
+#scrollTopBtn{position:fixed;bottom:30px;right:30px;z-index:1000;display:none;align-items:center;justify-content:center;width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,#0d9488 0%,#0891b2 100%);color:white;box-shadow:0 4px 15px rgba(13,148,136,0.4);cursor:pointer;transition:all 0.3s ease;border:none;font-size:24px;}
+#scrollTopBtn:hover{transform:translateY(-3px);box-shadow:0 6px 20px rgba(13,148,136,0.5);}
+#scrollTopBtn.show{display:flex;}
+.tab-nav{display:flex;gap:1rem;justify-content:center;margin-bottom:2rem;position:relative;z-index:10;}
+.tab-btn{padding:0.75rem 2rem;border:none;border-radius:9999px;font-weight:600;cursor:pointer;transition:all 0.3s ease;background:rgba(255,255,255,0.2);color:white;pointer-events:auto;position:relative;z-index:10;}
+.tab-btn:hover{background:rgba(255,255,255,0.3);}
+.tab-btn.active{background:linear-gradient(135deg,#0d9488 0%,#0891b2 100%);box-shadow:0 4px 15px rgba(13,148,136,0.4);}
+.tab-content{display:none;}
+.tab-content.active{display:block;}
+</style>
 </head>
 <body>
-<div class="g py-12 px-4 text-center text-white relative overflow-hidden">
+<div class="g py-12 px-4 text-center text-white relative">
 <div class="floating absolute top-4 left-10 w-20 h-20 bg-teal-300/20 rounded-full blur-xl"></div>
 <div class="floating absolute bottom-4 right-10 w-32 h-32 bg-cyan-300/20 rounded-full blur-xl" style="animation-delay:1s"></div>
 <div class="floating absolute top-1/2 left-1/4 w-16 h-16 bg-indigo-300/20 rounded-full blur-xl" style="animation-delay:2s"></div>
 <h1 class="text-4xl font-bold mb-2 tracking-tight">Home Loan Pre Payment & EMI Calculator</h1>
 <p class="text-white/80 text-lg">Smart planning for your dream home</p>
+<div class="tab-nav mt-6">
+<button class="tab-btn active" onclick="switchTab('calculator')">📊 Calculator</button>
+<button class="tab-btn" onclick="switchTab('guide')">📚 How to Plan</button>
+</div>
 </div>
 <div class="max-w-[1400px] mx-auto px-4 -mt-6">
+<div id="calculator-tab" class="tab-content active">
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
 <div class="lg:col-span-1 no-print">
 <div class="bg-white/90 backdrop-blur-xl rounded-2xl c p-6 border border-white/60 shadow-2xl">
@@ -93,7 +109,6 @@ tr:nth-child(even){background:rgba(248,250,252,0.8)}
 <div class="bg-white/80 backdrop-blur-sm rounded-2xl c p-6 border border-white/50">
 <h3 class="font-semibold mb-4 gradient-text text-xl">📈 Loan Amortization Timeline</h3>
 <div class="relative w-full" style="height:400px"><canvas id="chart" class="w-full h-full"></canvas></div>
-<p class="text-xs text-slate-400 text-center mt-2">Stacked bars: Principal (emerald) + Interest (orange). Purple line shows Outstanding Balance.</p>
 </div>
 <div id="rateTableSection" class="bg-white rounded-xl c overflow-hidden" style="display:none">
 <div class="p-5 border-b border-slate-100"><h3 class="font-semibold text-amber-600">Rate Changes Summary</h3><p class="text-xs text-slate-500 mt-1">Floating interest rate schedule</p></div>
@@ -121,6 +136,56 @@ tr:nth-child(even){background:rgba(248,250,252,0.8)}
 </div>
 </div>
 </div>
+</div>
+<div id="guide-tab" class="tab-content">
+<div class="bg-white/90 backdrop-blur-xl rounded-2xl c p-8 border border-white/60 shadow-2xl">
+<h2 class="text-3xl font-bold mb-6 gradient-text">📚 How to Plan Your Home Loan</h2>
+<div class="grid md:grid-cols-2 gap-6">
+<div class="space-y-4">
+<div class="bg-gradient-to-br from-emerald-50 to-emerald-100 rounded-xl p-5 border-l-4 border-emerald-500">
+<h3 class="font-bold text-emerald-700 mb-2">1. Assess Your Affordability</h3>
+<p class="text-sm text-slate-600">Your EMI should not exceed 40-50% of your monthly income. Use our calculator to find the right loan amount and tenure.</p>
+</div>
+<div class="bg-gradient-to-br from-amber-50 to-amber-100 rounded-xl p-5 border-l-4 border-amber-500">
+<h3 class="font-bold text-amber-700 mb-2">2. Compare Interest Rates</h3>
+<p class="text-sm text-slate-600">Even 0.5% difference can save lakhs over the loan tenure. Research and negotiate for the best rate.</p>
+</div>
+<div class="bg-gradient-to-br from-sky-50 to-sky-100 rounded-xl p-5 border-l-4 border-sky-500">
+<h3 class="font-bold text-sky-700 mb-2">3. Understand Pre-EMI (CLP)</h3>
+<p class="text-sm text-slate-600">For under-construction properties, you pay interest only on disbursed amounts. Plan for these pre-EMI payments.</p>
+</div>
+<div class="bg-gradient-to-br from-indigo-50 to-indigo-100 rounded-xl p-5 border-l-4 border-indigo-500">
+<h3 class="font-bold text-indigo-700 mb-2">4. Make Prepayments Wisely</h3>
+<p class="text-sm text-slate-600">Use bonuses, tax refunds, or savings for prepayments. "Reduce Tenure" saves more interest than "Reduce EMI".</p>
+</div>
+</div>
+<div class="space-y-4">
+<div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-5 border-l-4 border-purple-500">
+<h3 class="font-bold text-purple-700 mb-2">5. Choose the Right Tenure</h3>
+<p class="text-sm text-slate-600">Longer tenure = lower EMI but higher total interest. Shorter tenure = higher EMI but significant savings.</p>
+</div>
+<div class="bg-gradient-to-br from-rose-50 to-rose-100 rounded-xl p-5 border-l-4 border-rose-500">
+<h3 class="font-bold text-rose-700 mb-2">6. Consider Floating Rates</h3>
+<p class="text-sm text-slate-600">Floating rates may be lower initially but can increase. Use our rate change feature to see the impact.</p>
+</div>
+<div class="bg-gradient-to-br from-teal-50 to-teal-100 rounded-xl p-5 border-l-4 border-teal-500">
+<h3 class="font-bold text-teal-700 mb-2">7. Build Emergency Fund</h3>
+<p class="text-sm text-slate-600">Keep 3-6 months of EMI as emergency fund before taking the loan. This ensures you can pay during financial crunches.</p>
+</div>
+<div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-5 border-l-4 border-orange-500">
+<h3 class="font-bold text-orange-700 mb-2">8. Save Scenarios</h3>
+<p class="text-sm text-slate-600">Use our Save feature to compare different loan options. This helps you make an informed decision.</p>
+</div>
+</div>
+</div>
+<div class="mt-8 bg-gradient-to-r from-slate-100 to-slate-200 rounded-xl p-6">
+<h3 class="font-bold text-slate-700 mb-3">💡 Pro Tip</h3>
+<p class="text-slate-600">Use the calculator to simulate different scenarios. Try changing the tenure, adding prepayments, or adjusting interest rates to see how they affect your total outflow. Small changes can lead to big savings!</p>
+</div>
+</div>
+</div>
+</div>
+<button id="scrollTopBtn" onclick="scrollToTop()" title="Scroll to top">↑</button>
 <div id="mdl" class="fixed inset-0 bg-black/50 hidden z-50 flex items-center justify-center p-4" onclick="if(event.target===this)cm()">
 <div class="bg-white rounded-xl shadow-2xl max-w-3xl w-full max-h-[80vh] overflow-hidden">
 <div class="p-5 border-b border-slate-100 flex justify-between items-center"><div><h3 class="font-semibold" id="mt">Monthly Breakdown</h3><p class="text-xs text-slate-500" id="ms"></p></div><button onclick="cm()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200">&times;</button></div>
@@ -223,7 +288,7 @@ if(isFloat&&rateChanges.length>0){document.getElementById('rateTableBody').inner
 if(isDisb&&disbs.length>0){const preEMITot=yd.reduce((s,y)=>s+y.mo.reduce((ms,m)=>ms+(m.preEmi?m.i:0),0),0);document.getElementById('disbTableBody').innerHTML=disbs.map((d,i)=>`<tr class="border-b border-slate-100${i%2?' bg-slate-50':''}"><td class="px-5 py-3">${i+1}</td><td class="px-5 py-3 font-medium">${fmtMY(d.m)}</td><td class="px-5 py-3 text-right">${d.p?d.p.toFixed(1)+'%':''}</td><td class="px-5 py-3 text-right font-bold text-sky-600">${fc(d.a)}</td></tr>`).join('')+`<tr class="bg-sky-50 font-bold"><td class="px-5 py-3" colspan="3">Total Pre-EMI Interest</td><td class="px-5 py-3 text-right text-sky-700">${fc(preEMITot)}</td></tr>`;document.getElementById('disbTableSection').style.display='block';}else{document.getElementById('disbTableSection').style.display='none';}
 if(totPrep>0){let saved=ti0-ti;document.getElementById('saved').textContent=fc(saved);if(prepEffect==='emi'){document.getElementById('tenRedLabel').textContent='EMI Reduced';document.getElementById('tenRed').textContent=fc(curEmi)+' (from '+fc(emi0)+')';}else{document.getElementById('tenRedLabel').textContent='Tenure Reduced';document.getElementById('tenRed').textContent=(N-actualMonths)+' mo ('+(N/12-(actualMonths/12)).toFixed(1)+' yr)';}document.getElementById('savedRow').style.display='grid';const freqLabels={0:'One Time',1:'Monthly',3:'Quarterly',6:'Half-yearly',12:'Yearly'};document.getElementById('prepTableBody').innerHTML=preps.map((pr,i)=>`<tr class="border-b border-slate-100${i%2?' bg-slate-50':''}"><td class="px-5 py-3">${i+1}</td><td class="px-5 py-3 font-medium">${fmtMY(pr.m)}</td><td class="px-5 py-3">${freqLabels[pr.f]||'One Time'}</td><td class="px-5 py-3 text-right font-bold text-amber-600">${fc(pr.a)}</td></tr>`).join('');document.getElementById('prepTableSection').style.display='block';}
 else{document.getElementById('savedRow').style.display='none';document.getElementById('prepTableSection').style.display='none';}
-let totalPr=yd.reduce((s,y)=>s+y.pr,0),totalIn=yd.reduce((s,y)=>s+y.in,0),totalTo=yd.reduce((s,y)=>s+y.to,0),totalPP=yd.reduce((s,y)=>s+y.mo.reduce((ms,m)=>ms+m.pp,0),0),finalBal=yd[yd.length-1]?.mo[yd[yd.length-1].mo.length-1]?.b||0;document.getElementById('yt').innerHTML=yd.map((y,i)=>{let yrPP=y.mo.reduce((s,m)=>s+m.pp,0);return`<tr class="border-b border-slate-100 hover:bg-indigo-50 cursor-pointer" onclick="sm(${i})"><td class="px-3 py-3 font-medium">${yrLabel(y.y-1)}</td><td class="px-3 py-3 text-right text-emerald-600">${fc(y.pr)}</td><td class="px-3 py-3 text-right text-orange-500">${fc(y.in)}</td><td class="px-3 py-3 text-right text-amber-600 font-medium">${yrPP?fc(yrPP):'-'}</td><td class="px-3 py-3 text-right font-medium">${fc(y.to)}</td><td class="px-3 py-3 text-right text-slate-500">${fc(y.mo[y.mo.length-1].b)}</td></tr>`;}).join('')+`<tr class="bg-slate-100 font-bold border-t-2 border-slate-300"><td class="px-3 py-3">TOTAL</td><td class="px-3 py-3 text-right text-emerald-700">${fc(totalPr)}</td><td class="px-3 py-3 text-right text-orange-700">${fc(totalIn)}</td><td class="px-3 py-3 text-right text-amber-700">${totalPP?fc(totalPP):'-'}</td><td class="px-3 py-3 text-right text-indigo-700">${fc(totalTo)}</td><td class="px-3 py-3 text-right text-slate-700">${fc(finalBal)}</td></tr>`;
+let totalPr=yd.reduce((s,y)=>s+y.pr,0),totalIn=yd.reduce((s,y)=>s+y.in,0),totalTo=yd.reduce((s,y)=>s+y.to,0),totalPP=yd.reduce((s,y)=>s+y.mo.reduce((ms,m)=>ms+m.pp,0),0),finalBal=yd[yd.length-1]?.mo[yd[yd.length-1].mo.length-1]?.b||0;document.getElementById('yt').innerHTML=yd.map((y,i)=>{let yrPP=y.mo.reduce((s,m)=>s+m.pp,0);return`<tr class="border-b border-slate-100 hover:bg-indigo-50 cursor-pointer" onclick="sm(${i})"><td class="px-3 py-3 font-medium flex items-center gap-2"><span class="text-indigo-500 font-bold text-lg">+</span> ${yrLabel(y.y-1)}</td><td class="px-3 py-3 text-right text-emerald-600">${fc(y.pr)}</td><td class="px-3 py-3 text-right text-orange-500">${fc(y.in)}</td><td class="px-3 py-3 text-right text-amber-600 font-medium">${yrPP?fc(yrPP):'-'}</td><td class="px-3 py-3 text-right font-medium">${fc(y.to)}</td><td class="px-3 py-3 text-right text-slate-500">${fc(y.mo[y.mo.length-1].b)}</td></tr>`;}).join('')+`<tr class="bg-slate-100 font-bold border-t-2 border-slate-300"><td class="px-3 py-3">TOTAL</td><td class="px-3 py-3 text-right text-emerald-700">${fc(totalPr)}</td><td class="px-3 py-3 text-right text-orange-700">${fc(totalIn)}</td><td class="px-3 py-3 text-right text-amber-700">${totalPP?fc(totalPP):'-'}</td><td class="px-3 py-3 text-right text-indigo-700">${fc(totalTo)}</td><td class="px-3 py-3 text-right text-slate-700">${fc(finalBal)}</td></tr>`;
 document.getElementById('res').style.display='';setTimeout(drawChart,50);
 }
 function sm(i){
@@ -233,6 +298,9 @@ document.getElementById('mtb').innerHTML=y.mo.map((m,j)=>{let rateTd=isFloat?`<t
 document.getElementById('mdl').classList.remove('hidden');
 }
 function cm(){document.getElementById('mdl').classList.add('hidden')}
+function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});}
+window.addEventListener('scroll',function(){const btn=document.getElementById('scrollTopBtn');if(window.scrollY>300){btn.classList.add('show');}else{btn.classList.remove('show');}});
+function switchTab(tab){const tabs=document.querySelectorAll('.tab-btn');const contents=document.querySelectorAll('.tab-content');tabs.forEach(b=>b.classList.remove('active'));contents.forEach(c=>c.classList.remove('active'));if(tab==='calculator'){tabs[0].classList.add('active');document.getElementById('calculator-tab').classList.add('active');}else{tabs[1].classList.add('active');document.getElementById('guide-tab').classList.add('active');}window.scrollTo({top:0,behavior:'smooth'});}
 function resetAll(){document.getElementById('P').value='';document.getElementById('R').value='';document.getElementById('N').value='';document.getElementById('START').value='';document.getElementById('preps').innerHTML='';prepCount=0;document.getElementById('rates').innerHTML='';rateCount=0;document.getElementById('floatChk').checked=false;document.getElementById('rateSection').style.display='none';document.getElementById('disbChk').checked=false;document.getElementById('disbSection').style.display='none';document.getElementById('addDisbBtn').style.display='none';document.getElementById('disbs').innerHTML='';disbCount=0;document.getElementById('res').style.display='none';}
 function saveScenario(){const name=prompt('Enter scenario name:','Scenario '+(new Date().toLocaleDateString()));if(!name)return;const data={name,date:new Date().toISOString(),P:document.getElementById('P').value,R:document.getElementById('R').value,N:document.getElementById('N').value,START:document.getElementById('START').value,CUR:document.getElementById('CUR').value,floatChk:document.getElementById('floatChk').checked,disbChk:document.getElementById('disbChk').checked,prepEffect:document.querySelector('input[name=prepEffect]:checked')?.value||'tenure',preps:getPreps(),rates:getRates(),disbs:getDisbs()};let saved=JSON.parse(localStorage.getItem('emiScenarios')||'[]');saved.push(data);localStorage.setItem('emiScenarios',JSON.stringify(saved));renderSavedScenarios();alert('Scenario saved!');}
 function loadScenario(idx){const saved=JSON.parse(localStorage.getItem('emiScenarios')||'[]');if(!saved[idx])return;const d=saved[idx];document.getElementById('P').value=d.P||'';document.getElementById('R').value=d.R||'';document.getElementById('N').value=d.N||'';document.getElementById('START').value=d.START||'';document.getElementById('CUR').value=d.CUR||'INR';document.getElementById('floatChk').checked=d.floatChk||false;document.getElementById('rateSection').style.display=d.floatChk?'block':'none';document.getElementById('disbChk').checked=d.disbChk||false;document.getElementById('disbSection').style.display=d.disbChk?'block':'none';document.getElementById('addDisbBtn').style.display=d.disbChk?'block':'none';if(d.prepEffect==='emi')document.querySelector('input[name=prepEffect][value=emi]').checked=true;else document.querySelector('input[name=prepEffect][value=tenure]').checked=true;updCur();document.getElementById('preps').innerHTML='';prepCount=0;d.preps?.forEach(p=>{prepCount++;const div=document.createElement('div');div.id='pr'+prepCount;div.className='space-y-1.5 border border-slate-100 rounded-lg p-2 bg-slate-50';div.innerHTML=`<div class="flex gap-2 items-center"><input type="number" value="${p.a}" placeholder="Amount" class="flex-1 px-2 py-1.5 border rounded text-sm outline-none prepA"><button type="button" onclick="document.getElementById('preps').removeChild(document.getElementById('pr${prepCount}'))" class="text-rose-500 hover:text-rose-700 text-sm font-bold px-1 no-print">&times;</button></div><div class="flex gap-2 items-center no-print"><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepM"><option value="">Select Month</option>${genMonths()}</select><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepF"><option value="0" ${p.f===0?'selected':''}>One Time</option><option value="1" ${p.f===1?'selected':''}>Monthly</option><option value="3" ${p.f===3?'selected':''}>Quarterly</option><option value="6" ${p.f===6?'selected':''}>Half-yearly</option><option value="12" ${p.f===12?'selected':''}>Yearly</option></select></div>`;document.getElementById('preps').appendChild(div);setTimeout(()=>{const opts=div.querySelector('.prepM');for(let i=0;i<opts.options.length;i++){if(opts.options[i].value==p.m){opts.selectedIndex=i;break;}}},0);});document.getElementById('rates').innerHTML='';rateCount=0;d.rates?.forEach(r=>{rateCount++;const div=document.createElement('div');div.id='rc'+rateCount;div.className='space-y-1.5 border border-amber-100 rounded-lg p-2 bg-amber-50';div.innerHTML=`<div class="flex gap-2 items-center"><input type="number" step="0.01" value="${r.v}" placeholder="Rate %" class="flex-1 px-2 py-1.5 border rounded text-sm outline-none rateV"><button type="button" onclick="document.getElementById('rates').removeChild(document.getElementById('rc${rateCount}'))" class="text-rose-500 hover:text-rose-700 text-sm font-bold px-1">&times;</button></div><div class="flex gap-2 items-center"><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white rateM"><option value="">From Month</option>${genMonths()}</select></div>`;document.getElementById('rates').appendChild(div);setTimeout(()=>{const opts=div.querySelector('.rateM');for(let i=0;i<opts.options.length;i++){if(opts.options[i].value==r.m){opts.selectedIndex=i;break;}}},0);});document.getElementById('disbs').innerHTML='';disbCount=0;d.disbs?.forEach(disb=>{disbCount++;const div=document.createElement('div');div.id='db'+disbCount;div.className='space-y-1.5 border border-sky-100 rounded-lg p-2 bg-sky-50';div.innerHTML=`<div class="flex gap-2 items-center"><input type="number" value="${disb.p||''}" placeholder="% of Loan" step="0.1" class="w-20 px-2 py-1.5 border rounded text-sm outline-none disbP"><span class="text-xs text-slate-400">%</span><input type="number" value="${disb.a||''}" placeholder="Amount" class="flex-1 px-2 py-1.5 border rounded text-sm outline-none disbA"><button type="button" onclick="document.getElementById('disbs').removeChild(document.getElementById('db${disbCount}'))" class="text-rose-500 hover:text-rose-700 text-sm font-bold px-1">&times;</button></div><div class="flex gap-2 items-center"><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white disbM"><option value="">Month of Disbursement</option>${genMonths()}</select></div>`;document.getElementById('disbs').appendChild(div);setTimeout(()=>{const opts=div.querySelector('.disbM');for(let i=0;i<opts.options.length;i++){if(opts.options[i].value==disb.m){opts.selectedIndex=i;break;}}},0);});calc();alert('Loaded: '+d.name);}
@@ -344,7 +412,7 @@ ctx.fillStyle='rgba(255,255,255,0.9)';ctx.strokeStyle='#e2e8f0';ctx.lineWidth=1;
 // Principal legend
 ctx.fillStyle='#34d399';ctx.fillRect(W-M.r-170,M.t+15,15,15);ctx.fillStyle='#1f2937';ctx.font='12px sans-serif';ctx.textAlign='left';ctx.fillText('Principal',W-M.r-150,M.t+26);
 // Interest legend
-ctx.fillStyle='#fb7185';ctx.fillRect(W-M.r-170,M.t+38,15,15);ctx.fillStyle='#1f2937';ctx.fillText('Interest',W-M.r-150,M.t+49);
+ctx.fillStyle='#fb923c';ctx.fillRect(W-M.r-170,M.t+38,15,15);ctx.fillStyle='#1f2937';ctx.fillText('Interest',W-M.r-150,M.t+49);
 // Balance legend
 ctx.strokeStyle='#4f46e5';ctx.lineWidth=3;ctx.beginPath();ctx.moveTo(W-M.r-90,M.t+22);ctx.lineTo(W-M.r-75,M.t+22);ctx.stroke();ctx.fillStyle='#1f2937';ctx.fillText('Balance',W-M.r-70,M.t+26);
 }
