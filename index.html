@@ -53,8 +53,8 @@ tr:nth-child(even){background:rgba(248,250,252,0.8)}
 <h1 class="text-4xl font-bold mb-2 tracking-tight">Home Loan Pre Payment & EMI Calculator</h1>
 <p class="text-white/80 text-lg">Smart planning for your dream home</p>
 <div class="tab-nav mt-6">
-<button class="tab-btn active" onclick="switchTab('calculator')">📊 Calculator</button>
-<button class="tab-btn" onclick="switchTab('guide')">📚 How to Plan</button>
+<button class="tab-btn active" onclick="switchTab('calculator', this)">📊 Calculator</button>
+<button class="tab-btn" onclick="switchTab('guide', this)">📚 How to Plan</button>
 </div>
 </div>
 <div class="max-w-[1400px] mx-auto px-4 -mt-6">
@@ -175,6 +175,84 @@ tr:nth-child(even){background:rgba(248,250,252,0.8)}
 <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-5 border-l-4 border-orange-500">
 <h3 class="font-bold text-orange-700 mb-2">8. Save Scenarios</h3>
 <p class="text-sm text-slate-600">Use our Save feature to compare different loan options. This helps you make an informed decision.</p>
+</div>
+</div>
+</div>
+<div class="mt-8 bg-gradient-to-br from-teal-50 to-cyan-50 rounded-xl p-6 border border-teal-200">
+<h3 class="font-bold text-teal-700 mb-4 text-xl">🎯 Prepayment Planner</h3>
+<p class="text-sm text-slate-600 mb-4">Set your goal and get prepayment recommendations to achieve it.</p>
+<div class="bg-white rounded-xl p-5 border border-slate-200">
+<div class="space-y-4">
+<div>
+<label class="text-sm font-medium text-slate-700 mb-2 block">Your Goal</label>
+<div class="flex gap-4">
+<label class="flex items-center gap-2 cursor-pointer">
+<input type="radio" name="goalType" value="interest" class="accent-teal-600" onchange="toggleGoalInput()">
+<span class="text-sm text-slate-600">Reduce Total Interest</span>
+</label>
+<label class="flex items-center gap-2 cursor-pointer">
+<input type="radio" name="goalType" value="tenure" class="accent-teal-600" onchange="toggleGoalInput()">
+<span class="text-sm text-slate-600">Reduce Tenure</span>
+</label>
+</div>
+</div>
+<div id="interestGoalInput" class="hidden">
+<label class="text-sm font-medium text-slate-700 mb-2 block">Target Total Interest (₹)</label>
+<input type="number" id="targetInterest" placeholder="e.g., 1500000" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-teal-200 outline-none">
+</div>
+<div id="tenureGoalInput" class="hidden">
+<label class="text-sm font-medium text-slate-700 mb-2 block">Reduce Tenure By (Months)</label>
+<input type="number" id="targetTenureMonths" placeholder="e.g., 24" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-teal-200 outline-none">
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="text-sm font-medium text-slate-700 mb-2 block">Loan Amount (₹)</label>
+<input type="number" id="planLoanAmount" placeholder="e.g., 4000000" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-teal-200 outline-none">
+</div>
+<div>
+<label class="text-sm font-medium text-slate-700 mb-2 block">Interest Rate (%/year)</label>
+<input type="number" id="planInterestRate" placeholder="e.g., 7.5" step="0.01" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-teal-200 outline-none">
+</div>
+</div>
+<div>
+<label class="text-sm font-medium text-slate-700 mb-2 block">Current Tenure (Years)</label>
+<input type="number" id="planTenure" placeholder="e.g., 20" class="w-full px-3 py-2 border rounded-lg focus:ring-2 focus:ring-teal-200 outline-none">
+</div>
+<div>
+<label class="text-sm font-medium text-slate-700 mb-2 block">Start Prepayment After</label>
+<div class="flex items-center gap-4">
+<input type="range" id="startMonthSlider" min="0" max="60" value="0" step="6" class="flex-1 accent-teal-600" oninput="updateStartMonthDisplay()">
+<span class="text-sm font-bold text-teal-700 min-w-[100px] text-right" id="startMonthDisplay">Immediately</span>
+</div>
+<p class="text-xs text-slate-500 mt-1">Slide to delay prepayment start (0 = immediately)</p>
+</div>
+
+<!-- Live interest comparison table -->
+<div id="sliderCompareWrap" class="hidden mt-3">
+  <div class="rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+    <div class="bg-gradient-to-r from-teal-600 to-cyan-600 px-4 py-2.5 flex items-center gap-2">
+      <span class="text-white text-xs font-bold uppercase tracking-wider">⚡ Interest Impact of Delay</span>
+    </div>
+    <table class="w-full text-sm">
+      <thead>
+        <tr class="bg-slate-50 text-slate-500 text-xs uppercase tracking-wide">
+          <th class="px-3 py-2 text-left font-semibold">Scenario</th>
+          <th class="px-3 py-2 text-right font-semibold">Total Interest</th>
+          <th class="px-3 py-2 text-right font-semibold">Extra Cost</th>
+        </tr>
+      </thead>
+      <tbody id="sliderCompareBody"></tbody>
+    </table>
+    <div id="sliderCompareSummary" class="px-4 py-2.5 bg-amber-50 border-t border-amber-100 text-xs text-amber-800 font-medium"></div>
+  </div>
+</div>
+
+<button type="button" onclick="calculatePrepaymentPlan()" class="w-full py-2.5 bg-gradient-to-r from-teal-600 to-cyan-600 text-white font-semibold rounded-lg hover:from-teal-700 hover:to-cyan-700 transition-all">Calculate Prepayment Options</button>
+</div>
+<div id="prepaymentResults" class="mt-4 hidden">
+<h4 class="font-bold text-slate-700 mb-3">Recommended Prepayment Strategy</h4>
+<div id="prepaymentOptions" class="space-y-3"></div>
+<div id="startTimeRecommendation" class="mt-4 bg-gradient-to-r from-indigo-50 to-purple-50 p-4 rounded-lg border-l-4 border-indigo-500"></div>
 </div>
 </div>
 </div>
@@ -300,7 +378,133 @@ document.getElementById('mdl').classList.remove('hidden');
 function cm(){document.getElementById('mdl').classList.add('hidden')}
 function scrollToTop(){window.scrollTo({top:0,behavior:'smooth'});}
 window.addEventListener('scroll',function(){const btn=document.getElementById('scrollTopBtn');if(window.scrollY>300){btn.classList.add('show');}else{btn.classList.remove('show');}});
-function switchTab(tab){const tabs=document.querySelectorAll('.tab-btn');const contents=document.querySelectorAll('.tab-content');tabs.forEach(b=>b.classList.remove('active'));contents.forEach(c=>c.classList.remove('active'));if(tab==='calculator'){tabs[0].classList.add('active');document.getElementById('calculator-tab').classList.add('active');}else{tabs[1].classList.add('active');document.getElementById('guide-tab').classList.add('active');}window.scrollTo({top:0,behavior:'smooth'});}
+function switchTab(tab, btn){document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));document.getElementById(tab+'-tab').classList.add('active');btn.classList.add('active');window.scrollTo({top:0,behavior:'smooth'});}
+function toggleGoalInput(){const goalType=document.querySelector('input[name="goalType"]:checked')?.value;document.getElementById('interestGoalInput').classList.toggle('hidden',goalType!=='interest');document.getElementById('tenureGoalInput').classList.toggle('hidden',goalType!=='tenure');}
+function updateStartMonthDisplay(){
+  const months=Number(document.getElementById('startMonthSlider').value);
+  const display=document.getElementById('startMonthDisplay');
+  if(months===0){display.textContent='Immediately';}
+  else{const years=Math.floor(months/12);const remainingMonths=months%12;
+    if(remainingMonths===0){display.textContent=`${years} year${years>1?'s':''}`;}
+    else{display.textContent=`${years} year${years>1?'s':''} ${remainingMonths} month${remainingMonths>1?'s':''}`;}}
+  renderSliderCompareTable(months);
+}
+
+function calcInterestWithDelay(P,R,N,prepAmt,prepFreq,delayMonths){
+  // Returns total interest paid when prepayments start after delayMonths
+  if(!P||!R||!N)return null;
+  const r=R/100/12;
+  const emi=P*r*Math.pow(1+r,N)/(Math.pow(1+r,N)-1);
+  let bal=P,ti=0;
+  for(let m=1;m<=N*2;m++){
+    if(bal<=0.01)break;
+    const ipm=bal*r;
+    const prm=Math.min(emi-ipm,bal);
+    bal-=prm;
+    ti+=ipm;
+    if(prepAmt>0&&m>=delayMonths+1){
+      const apply=(prepFreq===0)?m===delayMonths+1:(m>delayMonths&&((m-(delayMonths+1))%prepFreq===0));
+      if(apply){bal=Math.max(0,bal-prepAmt);}
+    }
+  }
+  return ti;
+}
+
+function renderSliderCompareTable(selectedDelay){
+  const wrap=document.getElementById('sliderCompareWrap');
+  const tbody=document.getElementById('sliderCompareBody');
+  const summary=document.getElementById('sliderCompareSummary');
+
+  const P=Number(document.getElementById('planLoanAmount').value);
+  const Rpct=Number(document.getElementById('planInterestRate').value);
+  const Nyrs=Number(document.getElementById('planTenure').value);
+  if(!P||!Rpct||!Nyrs){wrap.classList.add('hidden');return;}
+
+  const N=Nyrs*12;
+  const r=Rpct/100/12;
+  const emi=P*r*Math.pow(1+r,N)/(Math.pow(1+r,N)-1);
+  const baseInterest=emi*N-P; // no prepayments at all
+
+  // Use a representative monthly prepayment = 10% of EMI as example if no specific amount
+  const prepAmt=Math.round(emi*0.1);
+
+  // Scenarios: immediate, selected delay, and a few steps in between
+  const steps=[0,6,12,18,24,36,48,60].filter(s=>s<=N);
+  // Always include selected delay if not already there
+  if(!steps.includes(selectedDelay)&&selectedDelay>0&&selectedDelay<=N)steps.push(selectedDelay);
+  steps.sort((a,b)=>a-b);
+
+  const immediateInt=calcInterestWithDelay(P,Rpct,N,prepAmt,1,0);
+
+  wrap.classList.remove('hidden');
+  tbody.innerHTML=steps.map(delay=>{
+    const ti=calcInterestWithDelay(P,Rpct,N,prepAmt,1,delay);
+    const extraVsImmediate=ti-immediateInt;
+    const isSelected=delay===selectedDelay;
+    const isImmediate=delay===0;
+    let label=delay===0?'Immediately':`After ${delay<12?delay+' mo':Math.floor(delay/12)+(delay%12?' yr '+delay%12+' mo':' yr')}`;
+    const fmt=n=>('₹'+(n/100000).toFixed(1)+'L');
+    const extraFmt=extraVsImmediate<=0?'<span class="text-emerald-600 font-bold">Baseline</span>':`<span class="text-red-500 font-semibold">+${fmt(extraVsImmediate)}</span>`;
+    const rowBg=isSelected?'bg-teal-50 font-bold':'hover:bg-slate-50';
+    const badge=isSelected?'<span class="ml-1 text-[10px] bg-teal-500 text-white px-1.5 py-0.5 rounded-full">selected</span>':'';
+    const isBadRow=delay===selectedDelay&&selectedDelay>0;
+    return`<tr class="${rowBg} border-b border-slate-100 transition-colors">
+      <td class="px-3 py-2 text-slate-700">${label}${badge}</td>
+      <td class="px-3 py-2 text-right text-slate-700">${fmt(ti)}</td>
+      <td class="px-3 py-2 text-right">${extraFmt}</td>
+    </tr>`;
+  }).join('');
+
+  // Summary message
+  if(selectedDelay===0){
+    summary.innerHTML='✅ Starting immediately gives you the best outcome — no extra interest cost.';
+  } else {
+    const selectedInt=calcInterestWithDelay(P,Rpct,N,prepAmt,1,selectedDelay);
+    const extra=selectedInt-immediateInt;
+    const extraL=(extra/100000).toFixed(2);
+    summary.innerHTML=`⚠️ Delaying by ${selectedDelay} months costs approximately <strong>₹${extraL}L extra</strong> in interest vs starting immediately.`;
+  }
+}
+function calculatePrepaymentPlan(){const goalType=document.querySelector('input[name="goalType"]:checked')?.value;if(!goalType){return;}
+const P=Number(document.getElementById('planLoanAmount').value);const R=Number(document.getElementById('planInterestRate').value)/100/12;const N=Number(document.getElementById('planTenure').value)*12;if(!P||!R||!N){return;}
+const startDelay=Number(document.getElementById('startMonthSlider').value);const emi=P*R*Math.pow(1+R,N)/(Math.pow(1+R,N)-1);const totalInterest=emi*N-P;let targetPrepayment=0,prepaymentFrequency='';const resultsDiv=document.getElementById('prepaymentResults');const optionsDiv=document.getElementById('prepaymentOptions');const startTimeDiv=document.getElementById('startTimeRecommendation');optionsDiv.innerHTML='';startTimeDiv.innerHTML='';resultsDiv.classList.remove('hidden');
+const annualRate=R*12;let startRecommendation='';if(annualRate>9){startRecommendation='⚡ Start immediately - High interest rate means every month counts!';}else if(annualRate>7.5){startRecommendation='🚀 Start within 3-6 months - Good rate, but early prepayments save significant interest.';}else if(annualRate>6){startRecommendation='📅 Start within 6-12 months - Moderate rate. Start early to maximize savings.';}else{startRecommendation='💰 Start anytime - Low rate gives you flexibility. Still, earlier is better!';}
+if(N/12>15){startRecommendation+='<br>🏠 Long tenure detected - Consider starting prepayments earlier to reduce long-term interest burden.';}else if(N/12<5){startRecommendation+='<br>⏰ Short tenure - Prepayments will have quick impact on closing the loan early.';}
+if(startDelay>0){const delayYears=(startDelay/12).toFixed(1);startRecommendation+=`<br>⏳ Current selection: Start after ${delayYears} years. This will reduce interest savings by approximately ${Math.round(startDelay/N*100)}%.`;}
+if(goalType==='interest'){const targetInterest=Number(document.getElementById('targetInterest').value);if(!targetInterest){return;}
+const interestToSave=totalInterest-targetInterest;if(interestToSave<=0){optionsDiv.innerHTML='<div class="bg-amber-50 p-3 rounded-lg text-amber-700 text-sm">Your current total interest is already below the target!</div>';startTimeDiv.innerHTML='<p class="text-sm text-slate-600">💡 No prepayment needed based on your target interest goal.</p>';return;}
+const effectiveMonths=N-startDelay;const adjustedInterestToSave=interestToSave*(effectiveMonths/N);targetPrepayment=adjustedInterestToSave;prepaymentFrequency='Monthly';const monthlyPrepayment=targetPrepayment/effectiveMonths;const quarterlyPrepayment=targetPrepayment/(effectiveMonths/3);const yearlyPrepayment=targetPrepayment/(effectiveMonths/12);
+optionsDiv.innerHTML=`
+<div class="bg-emerald-50 p-4 rounded-lg border-l-4 border-emerald-500">
+<p class="text-sm text-slate-600 mb-2"><strong>Current Total Interest:</strong> ₹${totalInterest.toLocaleString('en-IN',{maximumFractionDigits:0})}</p>
+<p class="text-sm text-slate-600 mb-2"><strong>Target Total Interest:</strong> ₹${targetInterest.toLocaleString('en-IN',{maximumFractionDigits:0})}</p>
+<p class="text-sm text-emerald-700 font-bold mb-2">Interest to Save: ₹${interestToSave.toLocaleString('en-IN',{maximumFractionDigits:0})}</p>
+${startDelay>0?`<p class="text-xs text-amber-600 mb-2">⚠️ Delaying by ${startDelay} months reduces savings to ₹${adjustedInterestToSave.toLocaleString('en-IN',{maximumFractionDigits:0})}</p>`:''}
+</div>
+<div class="space-y-2 mt-3">
+<div class="bg-blue-50 p-3 rounded-lg flex justify-between items-center"><span class="text-sm font-medium text-blue-700">📅 Monthly Prepayment</span><span class="text-sm font-bold text-blue-900">₹${monthlyPrepayment.toLocaleString('en-IN',{maximumFractionDigits:0})}/month</span></div>
+<div class="bg-purple-50 p-3 rounded-lg flex justify-between items-center"><span class="text-sm font-medium text-purple-700">📊 Quarterly Prepayment</span><span class="text-sm font-bold text-purple-900">₹${quarterlyPrepayment.toLocaleString('en-IN',{maximumFractionDigits:0})}/quarter</span></div>
+<div class="bg-orange-50 p-3 rounded-lg flex justify-between items-center"><span class="text-sm font-medium text-orange-700">📆 Yearly Prepayment</span><span class="text-sm font-bold text-orange-900">₹${yearlyPrepayment.toLocaleString('en-IN',{maximumFractionDigits:0})}/year</span></div>
+</div>
+`;}else{const targetMonths=Number(document.getElementById('targetTenureMonths').value);if(!targetMonths){return;}
+const newN=N-targetMonths;if(newN<=0){return;}
+const newEmi=P*R*Math.pow(1+R,newN)/(Math.pow(1+R,newN)-1);const newTotalInterest=newEmi*newN-P;const interestSaved=totalInterest-newTotalInterest;const effectiveMonths=N-startDelay;const adjustedInterestSaved=interestSaved*(effectiveMonths/N);targetPrepayment=adjustedInterestSaved;prepaymentFrequency='Monthly';const monthlyPrepayment=targetPrepayment/effectiveMonths;const quarterlyPrepayment=targetPrepayment/(effectiveMonths/3);const yearlyPrepayment=targetPrepayment/(effectiveMonths/12);
+optionsDiv.innerHTML=`
+<div class="bg-emerald-50 p-4 rounded-lg border-l-4 border-emerald-500">
+<p class="text-sm text-slate-600 mb-2"><strong>Current Tenure:</strong> ${N/12} years (${N} months)</p>
+<p class="text-sm text-slate-600 mb-2"><strong>New Tenure:</strong> ${newN/12} years (${newN} months)</p>
+<p class="text-sm text-slate-600 mb-2"><strong>Current EMI:</strong> ₹${emi.toLocaleString('en-IN',{maximumFractionDigits:0})}</p>
+<p class="text-sm text-slate-600 mb-2"><strong>New EMI:</strong> ₹${newEmi.toLocaleString('en-IN',{maximumFractionDigits:0})}</p>
+<p class="text-sm text-emerald-700 font-bold mb-2">Interest Saved: ₹${interestSaved.toLocaleString('en-IN',{maximumFractionDigits:0})}</p>
+${startDelay>0?`<p class="text-xs text-amber-600 mb-2">⚠️ Delaying by ${startDelay} months reduces savings to ₹${adjustedInterestSaved.toLocaleString('en-IN',{maximumFractionDigits:0})}</p>`:''}
+</div>
+<div class="space-y-2 mt-3">
+<div class="bg-blue-50 p-3 rounded-lg flex justify-between items-center"><span class="text-sm font-medium text-blue-700">📅 Monthly Prepayment</span><span class="text-sm font-bold text-blue-900">₹${monthlyPrepayment.toLocaleString('en-IN',{maximumFractionDigits:0})}/month</span></div>
+<div class="bg-purple-50 p-3 rounded-lg flex justify-between items-center"><span class="text-sm font-medium text-purple-700">📊 Quarterly Prepayment</span><span class="text-sm font-bold text-purple-900">₹${quarterlyPrepayment.toLocaleString('en-IN',{maximumFractionDigits:0})}/quarter</span></div>
+<div class="bg-orange-50 p-3 rounded-lg flex justify-between items-center"><span class="text-sm font-medium text-orange-700">📆 Yearly Prepayment</span><span class="text-sm font-bold text-orange-900">₹${yearlyPrepayment.toLocaleString('en-IN',{maximumFractionDigits:0})}/year</span></div>
+</div>
+`;}
+startTimeDiv.innerHTML=`<h5 class="font-bold text-indigo-700 mb-2">🕐 When to Start Prepayment</h5><p class="text-sm text-slate-700">${startRecommendation}</p>`;}
 function resetAll(){document.getElementById('P').value='';document.getElementById('R').value='';document.getElementById('N').value='';document.getElementById('START').value='';document.getElementById('preps').innerHTML='';prepCount=0;document.getElementById('rates').innerHTML='';rateCount=0;document.getElementById('floatChk').checked=false;document.getElementById('rateSection').style.display='none';document.getElementById('disbChk').checked=false;document.getElementById('disbSection').style.display='none';document.getElementById('addDisbBtn').style.display='none';document.getElementById('disbs').innerHTML='';disbCount=0;document.getElementById('res').style.display='none';}
 function saveScenario(){const name=prompt('Enter scenario name:','Scenario '+(new Date().toLocaleDateString()));if(!name)return;const data={name,date:new Date().toISOString(),P:document.getElementById('P').value,R:document.getElementById('R').value,N:document.getElementById('N').value,START:document.getElementById('START').value,CUR:document.getElementById('CUR').value,floatChk:document.getElementById('floatChk').checked,disbChk:document.getElementById('disbChk').checked,prepEffect:document.querySelector('input[name=prepEffect]:checked')?.value||'tenure',preps:getPreps(),rates:getRates(),disbs:getDisbs()};let saved=JSON.parse(localStorage.getItem('emiScenarios')||'[]');saved.push(data);localStorage.setItem('emiScenarios',JSON.stringify(saved));renderSavedScenarios();alert('Scenario saved!');}
 function loadScenario(idx){const saved=JSON.parse(localStorage.getItem('emiScenarios')||'[]');if(!saved[idx])return;const d=saved[idx];document.getElementById('P').value=d.P||'';document.getElementById('R').value=d.R||'';document.getElementById('N').value=d.N||'';document.getElementById('START').value=d.START||'';document.getElementById('CUR').value=d.CUR||'INR';document.getElementById('floatChk').checked=d.floatChk||false;document.getElementById('rateSection').style.display=d.floatChk?'block':'none';document.getElementById('disbChk').checked=d.disbChk||false;document.getElementById('disbSection').style.display=d.disbChk?'block':'none';document.getElementById('addDisbBtn').style.display=d.disbChk?'block':'none';if(d.prepEffect==='emi')document.querySelector('input[name=prepEffect][value=emi]').checked=true;else document.querySelector('input[name=prepEffect][value=tenure]').checked=true;updCur();document.getElementById('preps').innerHTML='';prepCount=0;d.preps?.forEach(p=>{prepCount++;const div=document.createElement('div');div.id='pr'+prepCount;div.className='space-y-1.5 border border-slate-100 rounded-lg p-2 bg-slate-50';div.innerHTML=`<div class="flex gap-2 items-center"><input type="number" value="${p.a}" placeholder="Amount" class="flex-1 px-2 py-1.5 border rounded text-sm outline-none prepA"><button type="button" onclick="document.getElementById('preps').removeChild(document.getElementById('pr${prepCount}'))" class="text-rose-500 hover:text-rose-700 text-sm font-bold px-1 no-print">&times;</button></div><div class="flex gap-2 items-center no-print"><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepM"><option value="">Select Month</option>${genMonths()}</select><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white prepF"><option value="0" ${p.f===0?'selected':''}>One Time</option><option value="1" ${p.f===1?'selected':''}>Monthly</option><option value="3" ${p.f===3?'selected':''}>Quarterly</option><option value="6" ${p.f===6?'selected':''}>Half-yearly</option><option value="12" ${p.f===12?'selected':''}>Yearly</option></select></div>`;document.getElementById('preps').appendChild(div);setTimeout(()=>{const opts=div.querySelector('.prepM');for(let i=0;i<opts.options.length;i++){if(opts.options[i].value==p.m){opts.selectedIndex=i;break;}}},0);});document.getElementById('rates').innerHTML='';rateCount=0;d.rates?.forEach(r=>{rateCount++;const div=document.createElement('div');div.id='rc'+rateCount;div.className='space-y-1.5 border border-amber-100 rounded-lg p-2 bg-amber-50';div.innerHTML=`<div class="flex gap-2 items-center"><input type="number" step="0.01" value="${r.v}" placeholder="Rate %" class="flex-1 px-2 py-1.5 border rounded text-sm outline-none rateV"><button type="button" onclick="document.getElementById('rates').removeChild(document.getElementById('rc${rateCount}'))" class="text-rose-500 hover:text-rose-700 text-sm font-bold px-1">&times;</button></div><div class="flex gap-2 items-center"><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white rateM"><option value="">From Month</option>${genMonths()}</select></div>`;document.getElementById('rates').appendChild(div);setTimeout(()=>{const opts=div.querySelector('.rateM');for(let i=0;i<opts.options.length;i++){if(opts.options[i].value==r.m){opts.selectedIndex=i;break;}}},0);});document.getElementById('disbs').innerHTML='';disbCount=0;d.disbs?.forEach(disb=>{disbCount++;const div=document.createElement('div');div.id='db'+disbCount;div.className='space-y-1.5 border border-sky-100 rounded-lg p-2 bg-sky-50';div.innerHTML=`<div class="flex gap-2 items-center"><input type="number" value="${disb.p||''}" placeholder="% of Loan" step="0.1" class="w-20 px-2 py-1.5 border rounded text-sm outline-none disbP"><span class="text-xs text-slate-400">%</span><input type="number" value="${disb.a||''}" placeholder="Amount" class="flex-1 px-2 py-1.5 border rounded text-sm outline-none disbA"><button type="button" onclick="document.getElementById('disbs').removeChild(document.getElementById('db${disbCount}'))" class="text-rose-500 hover:text-rose-700 text-sm font-bold px-1">&times;</button></div><div class="flex gap-2 items-center"><select class="flex-1 px-2 py-1.5 border rounded text-sm outline-none bg-white disbM"><option value="">Month of Disbursement</option>${genMonths()}</select></div>`;document.getElementById('disbs').appendChild(div);setTimeout(()=>{const opts=div.querySelector('.disbM');for(let i=0;i<opts.options.length;i++){if(opts.options[i].value==disb.m){opts.selectedIndex=i;break;}}},0);});calc();alert('Loaded: '+d.name);}
