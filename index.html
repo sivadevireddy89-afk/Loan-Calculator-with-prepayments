@@ -370,8 +370,22 @@ function cur(){return document.getElementById('CUR').value}
 function sym(){const c=cur();return c==='INR'?'₹':c==='AUD'?'A$':'$'}
 function loc(){const c=cur();return c==='INR'?'en-IN':c==='AUD'?'en-AU':'en-US'}
 function fc(n){return sym()+n.toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2})}
-function updCur(){const c=cur();document.getElementById('LP').textContent='Loan Amount ('+sym()+')';if(c==='INR')document.getElementById('P').value=4000000;else if(c==='AUD')document.getElementById('P').value=600000;else document.getElementById('P').value=300000;}
-let prepCount=0,rateCount=0;
+
+function updCur(){
+  const c = cur();
+  document.getElementById('LP').textContent = 'Loan Amount (' + sym() + ')';
+
+  const pInput = document.getElementById('P');
+
+  // ✅ FIX: Only set default if empty (don't overwrite loaded/saved value)
+  if (!pInput.value) {
+    if (c === 'INR') pInput.value = 4000000;
+    else if (c === 'AUD') pInput.value = 600000;
+    else pInput.value = 300000;
+  }
+}
+
+  let prepCount=0,rateCount=0;
 document.addEventListener('DOMContentLoaded',function(){
 document.getElementById('START').value='2025-06';
 document.getElementById('CUR').value='INR';
